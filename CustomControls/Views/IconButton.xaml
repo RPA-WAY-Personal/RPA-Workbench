@@ -1,0 +1,102 @@
+﻿<Button xmlns:shared="http://schemas.actiprosoftware.com/winfx/xaml/shared"  x:Class="CustomControls.IconButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Width="244.214" Height="60.846"
+          BorderBrush="{x:Null}" BorderThickness="0">
+    <!--<Button.Effect>
+        <DropShadowEffect BlurRadius="12" Color="Gray" Direction="270" Opacity=".8" ShadowDepth="3" />
+    </Button.Effect>-->
+
+    <Button.Template>
+        <ControlTemplate TargetType="Button">
+            <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=ActualWidth}"
+        Height="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=ActualHeight}">
+
+                <Border x:Name="MainBorder" Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=BackgroundGridColor, FallbackValue=''}" CornerRadius="0" Grid.ColumnSpan="2" Margin="0,0,4,4" BorderBrush="Black" BorderThickness="0">
+                    <!--<Border.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#FF5E5E5E" Offset="0" />
+                            <GradientStop Color="#FF040404" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>-->
+
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--<Border CornerRadius="2" Margin="0" BorderBrush="LightGray" BorderThickness="0,1,0,0" Grid.ColumnSpan="2" Grid.RowSpan="2" />-->
+
+                        <!--<Line X1="10" Y1="0" X2="10" Y2="10" Stretch="Fill" Grid.Column="0" HorizontalAlignment="Right" Stroke="#0C0C0C" Grid.RowSpan="2" />
+                        <Line X1="10" Y1="0" X2="10" Y2="10" Stretch="Fill" Grid.Column="1" HorizontalAlignment="Left" Grid.RowSpan="2">
+                            <Line.Stroke>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#4D4D4D" Offset="0" />
+                                    <GradientStop Color="#2C2C2C" Offset="1" />
+                                </LinearGradientBrush>
+                            </Line.Stroke>
+                        </Line>-->
+
+                        <ContentControl HorizontalAlignment="Left" VerticalAlignment="Center" Grid.RowSpan="2">
+                            <ContentControl.Content>
+                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Image">
+                                    <Binding.FallbackValue>
+                                        <Path Data="M0,0 L30,15 L0,30Z">
+                                            <Path.Effect>
+                                                <DropShadowEffect Direction="50" ShadowDepth="2" />
+                                            </Path.Effect>
+                                            <Path.Fill>
+                                                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                                    <GradientStop Color="#4B86B2" Offset="0" />
+                                                    <GradientStop Color="#477FA8" Offset="1" />
+                                                </LinearGradientBrush>
+                                            </Path.Fill>
+                                        </Path>
+                                    </Binding.FallbackValue>
+                                </Binding>
+                            </ContentControl.Content>
+                        </ContentControl>
+
+
+                        <Grid Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <shared:AdvancedTextBlock x:Name="Title" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Title, FallbackValue='Button Title'}" Grid.Column="1" VerticalAlignment="Bottom" FontFamily="Calibri" FontWeight="Thin" FontSize="22" Foreground="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TitleColor, FallbackValue='White'}" Margin="5,0,0,0" />
+                            <shared:AdvancedTextBlock x:Name="SubTitle" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SubTitle, FallbackValue='Button Description'}" Grid.Column="1" Grid.Row="1" VerticalAlignment="top" FontFamily="Calibri" FontSize="12" Foreground="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SubtitleColor, FallbackValue='White'}" Margin="5,0,0,0" FontWeight="Light" />
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <!--<Setter TargetName="Title" Property="TextDecorations" Value="Underline" />
+                    <Setter TargetName="SubTitle" Property="TextDecorations" Value="Underline" />-->
+                    <Setter TargetName="MainBorder" Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="#FF999595" Offset="0" />
+                                <GradientStop Color="#FF999595" Offset="1" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter TargetName="MainBorder" Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="#FF5E5E5E" Offset="0" />
+                                <GradientStop Color="#FF5E5E5E" Offset="1" />
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Button.Template>
+</Button>

@@ -1,0 +1,56 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RPA_Workbench.Views.StartupMenu"
+             xmlns:shared="http://schemas.actiprosoftware.com/winfx/xaml/shared" xmlns:ribbon="http://schemas.actiprosoftware.com/winfx/xaml/ribbon" xmlns:StartupMenu="clr-namespace:RPA_Workbench.ViewModels.StartupMenu" x:Class="RPA_Workbench.Views.StartupMenu.StartPageCreateFromTemplateDialog"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <LinearGradientBrush x:Key="LargeVerticalSeparatorBrush" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#00d7d7d7" Offset="0"/>
+            <GradientStop Color="#d7d7d7" Offset="0.1"/>
+            <GradientStop Color="#d7d7d7" Offset="0.9"/>
+            <GradientStop Color="#00d7d7d7" Offset="1"/>
+        </LinearGradientBrush>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <StartupMenu:StartPageViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+
+        <shared:AdvancedTextBlock x:Name="formCustomTitle" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="248" Text="Create a New Project" HighlightFontWeight="ExtraBold" FontSize="22" FontWeight="SemiBold"/>
+        <shared:AdvancedTextBlock x:Name="lblGetStarted" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Width="100" Text="Get Started" HighlightFontWeight="ExtraBold" FontSize="16" FontWeight="SemiBold"/>
+
+        <Rectangle Width="0" Margin="458.5,22,341.5,-55" HorizontalAlignment="Center" Fill="{StaticResource LargeVerticalSeparatorBrush}"/>
+        <Label VerticalAlignment="Top" Margin="10,86,0,0" HorizontalAlignment="Left" Content="Name"/>
+        <Label VerticalAlignment="Top" Margin="10,117,0,0" HorizontalAlignment="Left" Content="Location"/>
+        <Label VerticalAlignment="Top" Margin="10,148,0,0" HorizontalAlignment="Left" Content="Description"/>
+        <ribbon:TextBox x:Name="txtProcessName" Width="323" VerticalAlignment="Top" Text="{Binding Mode=TwoWay,Path=ProjectName,UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" Margin="88,86,0,0" Height="23" HorizontalAlignment="Left" />
+        <ribbon:TextBox x:Name="txtProcessLocation" Width="323" VerticalAlignment="Top" TextWrapping="Wrap" Margin="88,118,0,0" Height="23" HorizontalAlignment="Left"/>
+        <ribbon:TextBox x:Name="txtProcessDescription" Width="323" VerticalContentAlignment="Top" VerticalAlignment="Top" Text="{Binding Mode=TwoWay,Path=ProjectDescription,UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" Margin="88,160,0,0" Height="49" HorizontalAlignment="Left"/>
+
+
+
+        <shared:DynamicImage x:Name="NameErrorIcon" HorizontalAlignment="Left" Height="23" Margin="386,86,0,0" VerticalAlignment="Top" Width="25"  ToolTip="This path project already exists" ScrollViewer.VerticalScrollBarVisibility="Hidden" RenderTransformOrigin="0.416,-0.27"/>
+        <ribbon:ComboBox x:Name="cmbProjectExpression" HorizontalAlignment="Left" Margin="87,241,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0" IsEnabled="False">
+            <ComboBoxItem Content="VB.Net"/>
+            <ComboBoxItem Content="C#"/>
+        </ribbon:ComboBox>
+        <Label Content="Expression" HorizontalAlignment="Left" Margin="10,237,0,0" VerticalAlignment="Top"/>
+        <ribbon:Button x:Name="btnBack" Command="{Binding PreviousPageCommand}" HorizontalAlignment="Left" Margin="10,410,0,0" VerticalAlignment="Top" Height="30" Width="33" ImageSourceSmallSize="32,32">
+            <ribbon:Button.ImageSourceSmall>
+                <BitmapImage UriSource="/RPA-Workbench-Revision2;component/1.%20Resources/StartPage%20Images/Back%20Arrow%20Dark.png" UriCachePolicy="{x:Null}"/>
+            </ribbon:Button.ImageSourceSmall>
+        </ribbon:Button>
+        <ribbon:Button x:Name="btnCreateProject" HorizontalAlignment="Left" Margin="294,241,0,0" VerticalAlignment="Top" Height="23" Width="117" ImageSourceSmallSize="20,20" Label="Create Project" StaysOpenOnClick="True" Foreground="Black" BorderBrush="#FFD3D4D7" Focusable="False" Command="{Binding CreateProjectCommand}">
+            <ribbon:Button.ImageSourceSmall>
+                <BitmapImage UriSource="/RPA-Workbench-Revision2;component/1.%20Resources/StartPage%20Images/CreateProject%20Dark.png" UriCachePolicy="{x:Null}"/>
+            </ribbon:Button.ImageSourceSmall>
+        </ribbon:Button>
+
+
+
+    </Grid>
+</UserControl>

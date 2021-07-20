@@ -1,0 +1,28 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RPA_Workbench.Views.StartupMenu"
+             xmlns:shared="http://schemas.actiprosoftware.com/winfx/xaml/shared" xmlns:CustomControls="clr-namespace:CustomControls;assembly=CustomControls" xmlns:ribbon="http://schemas.actiprosoftware.com/winfx/xaml/ribbon" x:Class="RPA_Workbench.Views.StartupMenu.StartPageTemplateDialog"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+        <shared:AdvancedTextBlock x:Name="formCustomTitle" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="248" Text="Create a New Project" HighlightFontWeight="ExtraBold" FontSize="22" FontWeight="SemiBold"/>
+        <shared:AdvancedTextBlock x:Name="lblGetStarted" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Width="100" Text="Get Started" HighlightFontWeight="ExtraBold" FontSize="16" FontWeight="SemiBold"/>
+        <CustomControls:IconButton x:Name="btnCreateANewProcess" Command="{Binding CreateNewProjectFromTemplatePageCommmand}"  HorizontalAlignment="Left" Margin="10,89,0,0" TitleColor="Black" Title="Create new process" SubTitle="Creates a new automation process" Width="269" Height="53" Foreground="#FFDC4F4F"  Content="Open Project (From Template)" SubtitleColor="Black" HorizontalContentAlignment="Left" VerticalAlignment="Top" >
+            <CustomControls:IconButton.Image>
+                <Image Source="/RPA-Workbench-Revision2;component/1. Resources/StartPage Images/Create Icon Dark.png" HorizontalAlignment="Left" />
+            </CustomControls:IconButton.Image>
+        </CustomControls:IconButton>
+
+        <ribbon:Button x:Name="btnBack" Command="{Binding Path=PreviousPageCommand}" HorizontalAlignment="Left" Margin="10,410,0,0" VerticalAlignment="Top" Height="30" Width="33" ImageSourceSmallSize="32,32">
+            <ribbon:Button.ImageSourceSmall>
+                <BitmapImage UriSource="/RPA-Workbench-Revision2;component/1.%20Resources/StartPage%20Images/Back%20Arrow%20Dark.png" UriCachePolicy="{x:Null}"/>
+            </ribbon:Button.ImageSourceSmall>
+        </ribbon:Button>
+
+    </Grid>
+
+</UserControl>

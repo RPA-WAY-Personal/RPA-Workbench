@@ -1,0 +1,88 @@
+<ribbon:RibbonWindow x:Class="CustomControls.Views.CustomMessageBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:shared="http://schemas.actiprosoftware.com/winfx/xaml/shared" 
+	xmlns:ribbon="http://schemas.actiprosoftware.com/winfx/xaml/ribbon" 
+	xmlns:themes="http://schemas.actiprosoftware.com/winfx/xaml/themes"     
+    ApplicationName="RPA Workbench" Title="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Title, FallbackValue='Button Title'}" Width="553.933" Height="217.97" IsMaximizeButtonVisible="False" IsMinimizeButtonVisible="False" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+    <themes:WindowChrome.Chrome>
+        <themes:WindowChrome x:Name="WindowChromeCurrent" TitleBarMergeKind="Full"
+							 TitleBarHeaderAlignment="Left"
+							 HasMaximizeButton="False"
+							 HasMinimizeButton="False"
+							 HasOuterGlow="True"
+							 HasTitleBar="True" 
+							 TitleBarHeaderMargin="20,0"
+		>
+        </themes:WindowChrome>
+        <!--<themes:WindowChromeTitleBarMergeKind>Full</themes:WindowChromeTitleBarMergeKind>-->
+
+    </themes:WindowChrome.Chrome>
+    <ribbon:RibbonWindow.Resources>
+        <Style TargetType="Button" 
+            x:Key="MessageBoxButtonStyle">
+            <Setter Property="Background" 
+        Value="Transparent" />
+            <Setter Property="TextBlock.TextAlignment" 
+        Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border  Name="Border" CornerRadius="0"  
+                    BorderBrush="#000" BorderThickness="1,1,1,1" 
+                    Background="{TemplateBinding Background}">
+                            <ContentPresenter x:Name="contentPresenter" 
+                        ContentTemplate="{TemplateBinding ContentTemplate}" 
+                        Content="{TemplateBinding Content}" 
+                        HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+                        Margin="{TemplateBinding Padding}" 
+                        VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ribbon:RibbonWindow.Resources>
+    <Grid  >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Rectangle Grid.Row="0" 
+            Grid.Column="0"  Grid.ColumnSpan="2" Fill="#FF1C6A20">
+        </Rectangle>
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" 
+            MinHeight="40" >
+            <TextBlock Margin="5,1,0,1" Name="MessageTitle"  
+                FontWeight="Bold" TextTrimming="CharacterEllipsis" 
+                LineHeight="22" FontSize="16" 
+                VerticalAlignment="Center" Foreground="White"/>
+        </Grid>
+        <TextBlock Margin="0,10,20,0"   
+            VerticalAlignment="Top" 
+            TextWrapping="Wrap" Name="txtMsg" 
+            Grid.Row="1" FontSize="18" 
+                    LineHeight="20" Height="50" Grid.Column="1"  />
+        <Grid Grid.Row="2" Grid.ColumnSpan="2"  
+            Grid.Column="0" >
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
+                <ribbon:Button x:Name="btnBrowse" Label="Browse" BorderBrush="#FF1C6A20" Margin="5,0,0,0" Click="Button_Click"></ribbon:Button>
+                <ribbon:Button x:Name="btnOk" Width="46" Label="OK" BorderBrush="#FF1C6A20" HorizontalContentAlignment="Center" Margin="5,0,0,0"  Click="Button_Click"></ribbon:Button>
+                <ribbon:Button x:Name="btnYes" Width="46" Label="Yes" BorderBrush="#FF1C6A20" HorizontalContentAlignment="Center" Margin="5,0,0,0"  Click="Button_Click"></ribbon:Button>
+                <ribbon:Button x:Name="btnNo" Width="46" Label="No" BorderBrush="#FF1C6A20" HorizontalContentAlignment="Center" Margin="5,0,0,0"  Click="Button_Click"></ribbon:Button>
+                <ribbon:Button x:Name="btnCancel" Width="46" Label="Cancel" BorderBrush="#FF1C6A20" HorizontalContentAlignment="Center" Margin="5,0,0,0"  Click="Button_Click"></ribbon:Button>
+            </StackPanel>
+        </Grid>
+        <Image x:Name="img" Margin="41,0,455,115" 
+            Grid.Column="1" Width="50" 
+            Height="50"  Stretch="Fill" Grid.RowSpan="2" />
+
+    </Grid>
+</ribbon:RibbonWindow>
