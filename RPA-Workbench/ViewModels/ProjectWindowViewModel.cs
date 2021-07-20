@@ -22,6 +22,8 @@ using RPA_Workbench.Utilities;
 using System.Windows.Media.Effects;
 using ActiproSoftware.Windows.Controls.Ribbon.Controls;
 using Button = ActiproSoftware.Windows.Controls.Ribbon.Controls.Button;
+using Newtonsoft.Json;
+
 namespace RPA_Workbench.ViewModels
 {
     public class ProjectWindowViewModel
@@ -448,9 +450,57 @@ namespace RPA_Workbench.ViewModels
             }
 
         }
-        private static TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo)
+        private class Reference
+        {
+            string _name;
+            public string Name
+            {
+                get { return _name; }
+                set { _name = value; }
+            }
+
+
+            string _location;
+            public string Location
+            {
+                get { return _location; }
+                set { _location = value; }
+            }
+
+            string _fullname;
+            public string FullName
+            {
+                get { return _fullname; }
+                set { _fullname = value; }
+            }
+
+            //Version _version;
+            //public Version Version
+            //{
+            //    get { return _version; }
+            //    set { _version = value; }
+            //}
+        }
+        private TreeViewItem GetDependencies()
+        {
+            //Get Depedencies and show them
+            var depedencyTree = new TreeViewItem { Header = "Dependencies" };
+            StreamReader streamReader = new StreamReader(ProjectDirectory + "\\.root" + "\\Dependencies.json");
+
+            string DependecyFileContents = streamReader.ReadToEnd();
+            List<Reference> originalReferences = JsonConvert.DeserializeObject<List<Reference>>(DependecyFileContents);
+
+            foreach (var item in originalReferences)
+            {
+                depedencyTree.Items.Add(new TreeViewItem { Header = item.Name + ".dll" });
+            }
+
+            return depedencyTree;
+        }
+        private TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo)
         {
             var directoryNode = new TreeViewItem { Header = directoryInfo.Name };
+            directoryNode.Items.Add(GetDependencies());
             foreach (var directory in directoryInfo.GetDirectories())
             {
                 if (directory.Name.Contains("json") || directory.Name.StartsWith("."))
@@ -470,6 +520,7 @@ namespace RPA_Workbench.ViewModels
                 directoryNode.Items.Add(new TreeViewItem { Header = file.Name });
             }
 
+        
 
             return directoryNode;
 
@@ -672,6 +723,28 @@ namespace RPA_Workbench.ViewModels
                 }
                 File.Move(FileToMove, FileDestination);
             }
+
+            //ListDirectory();
+            RefreshSolutionList();
+            //MessageBox.Show("Moving File: " + FileToMove + Environment.NewLine +
+            //				"To" + Environment.NewLine +
+            //				"File Destination" + FileDestination);
+        }
+
+        public void addChildAsDependancy(TreeViewItem _sourceItem, TreeViewItem _targetItem)
+        {
+            // add item in target TreeViewItem 
+            TreeViewItem item1 = new TreeViewItem();
+            item1.Header = _sourceItem.Header;
+            _targetItem.Items.Add(item1);
+            string JustFolderName = new System.IO.DirectoryInfo(ProjectRootFolder).Name;
+
+                string FileToMove = ProjectDirectory + "\\" + _sourceItem.Header;
+                string FileDestination = ProjectDirectory + "\\" + _targetItem.Header + "\\" + _sourceItem.Header;
+                foreach (TreeViewItem item in _sourceItem.Items)
+                {
+                addChildAsDependancy(item, item1);
+                }
 
             //ListDirectory();
             RefreshSolutionList();
