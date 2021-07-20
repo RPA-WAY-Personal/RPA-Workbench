@@ -1097,11 +1097,24 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
 
         private void AddReference()
         {
-            OpenFileDialog fileDialog = WorkflowFileDialogFactory.CreateAddReferenceDialog();
-            if (fileDialog.ShowDialog() == true)
+            try
             {
-                this.AddActivitiesFromAssemblies(fileDialog.FileNames);
+                OpenFileDialog fileDialog = WorkflowFileDialogFactory.CreateAddReferenceDialog();
+                fileDialog.Multiselect = true;
+                if (fileDialog.ShowDialog() == true)
+                {
+                    foreach (var filename in fileDialog.SafeFileNames)
+                    {
+                        File.Copy(fileDialog.FileName, Environment.CurrentDirectory + "\\" + filename, true);
+                    }
+                    this.AddActivitiesFromAssemblies(fileDialog.FileNames);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+          
         }
 
        
@@ -1292,13 +1305,15 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 set { _fullname = value; }
             }
 
-            Version _version;
-            public Version Version
-            {
-                get { return _version; }
-                set { _version = value; }
-            }
+            //Version _version;
+            //public Version Version
+            //{
+            //    get { return _version; }
+            //    set { _version = value; }
+            //}
         }
+        List<Reference> references;
+        Reference reference;
         private void AddReferencesToFile(Assembly assembly)
         {
             if (Directory.Exists(CurrentProjectPath + "//.root") == false)
@@ -1307,16 +1322,49 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             }
             // MessageBox.Show(assembly.FullName);
 
-            Reference reference = new Reference
-            {
-                Name = assembly.GetName().Name,
-                Location = assembly.Location,
-                FullName = assembly.FullName//,
-               // Version = assembly.GetName().Version
-            };
+            //Reference reference = new Reference
+            //{
+            //    Name = assembly.GetName().Name,
+            //    Location = assembly.Location,
+            //    FullName = assembly.FullName//,
+            //   // Version = assembly.GetName().Version
+            //};
 
-            List<Reference> references = new List<Reference>();
-            references.Add(reference);
+
+           
+            StreamReader streamReader = new StreamReader(CurrentProjectPath + "\\.root" + "\\Dependencies.json");
+
+            string DependecyFileContents = streamReader.ReadToEnd();
+            if (string.IsNullOrEmpty(DependecyFileContents))
+            {
+                references = new List<Reference>();
+                reference = new Reference
+                {
+                    Name = assembly.GetName().Name,
+                    Location = assembly.Location,
+                    FullName = assembly.FullName//,
+                   // Version = assembly.GetName().Version
+                };
+                references.Add(reference);
+            }
+            else //If Dep file contains depedencies already, make a copy of them, add new one and add the old ones
+            {
+                references = new List<Reference>();
+                List<Reference> originalReferences = JsonConvert.DeserializeObject<List<Reference>>(DependecyFileContents);
+                foreach (var item in originalReferences)
+                {
+                    references.Add(item);
+                }
+                reference = new Reference
+                {
+                    Name = assembly.GetName().Name,
+                    Location = assembly.Location,
+                    FullName = assembly.FullName
+                };
+                references.Add(reference);
+            }
+           
+            streamReader.Close();
 
             string json = JsonConvert.SerializeObject(references, Formatting.Indented);
             //JObject ReferenceJson = new JObject(
@@ -1325,7 +1373,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             //new JProperty("Fullname", assembly.FullName));
 
             //File.WriteAllText(CurrentProjectPath + "\\.root" + "\\Dependencies.json", json);
-            TextWriter tsw = new StreamWriter(CurrentProjectPath + "\\.root" + "\\Dependencies.json", true);
+            TextWriter tsw = new StreamWriter(CurrentProjectPath + "\\.root" + "\\Dependencies.json");
             tsw.Write(json);
             tsw.Close();
             //JsonControls jsonControls = new JsonControls();
