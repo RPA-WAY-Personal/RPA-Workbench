@@ -21,6 +21,7 @@ using RPA_Workbench.Utilities.TreeNodeClasses;
 using RPA_Workbench.Utilities;
 using System.Windows.Media.Effects;
 using ActiproSoftware.Windows.Controls.Ribbon.Controls;
+using ActiproSoftware.Windows.Controls.Ribbon;
 using Button = ActiproSoftware.Windows.Controls.Ribbon.Controls.Button;
 using Newtonsoft.Json;
 
@@ -78,6 +79,8 @@ namespace RPA_Workbench.ViewModels
             RefreshProjectListCommand = new RelayCommand(new Action<object>(RefreshProjectList));
             OpenRenameDialogCommand = new RelayCommand(new Action<object>(OpenRenameDialog));
             SetAsMainCommand = new RelayCommand(new Action<object>(SetAsMain));
+            RemoveDepedencyCommand = new RelayCommand(new Action<object>(RemoveDependency));
+            AddDepedencyCommand = new RelayCommand(new Action<object>(AddDependency));
         }
 
         #region ICommands
@@ -162,6 +165,33 @@ namespace RPA_Workbench.ViewModels
             set
             {
                 iSetAsMain = value;
+            }
+        }
+
+
+        private ICommand iRemoveDepedency;
+        public ICommand RemoveDepedencyCommand
+        {
+            get
+            {
+                return iRemoveDepedency;
+            }
+            set
+            {
+                iRemoveDepedency = value;
+            }
+        }
+
+        private ICommand iAddDepedency;
+        public ICommand AddDepedencyCommand
+        {
+            get
+            {
+                return iAddDepedency;
+            }
+            set
+            {
+                iAddDepedency = value;
             }
         }
 
@@ -268,6 +298,64 @@ namespace RPA_Workbench.ViewModels
             }
          
             RefreshSolutionList();
+        }
+
+        void RemoveDependency(object parameter)
+        {
+            StreamReader streamReader = new StreamReader(ProjectDirectory + "\\.root" + "\\Dependencies.json");
+            var depedencyTree = new TreeViewItem { Header = "Dependencies" };
+            string DependecyFileContents = streamReader.ReadToEnd();
+            if (SelectedFileName.Contains(".dll"))
+            {
+                SelectedFileName = SelectedFileName.Replace(".dll", "");
+            }
+            List<Reference> originalReferences = JsonConvert.DeserializeObject<List<Reference>>(DependecyFileContents);
+            Reference CurrentItteratedReference = new Reference();
+            if (originalReferences != null)
+            {
+                foreach (var item in originalReferences)
+                {
+                    if (item.Name == SelectedFileName)
+                    {
+                        depedencyTree.Items.Remove(item);
+                        CurrentItteratedReference = item;
+                    }
+                }
+                if (CurrentItteratedReference.Name == SelectedFileName)
+                {
+                    originalReferences.Remove(CurrentItteratedReference);
+                }
+            }
+
+            streamReader.Close();
+            string json = JsonConvert.SerializeObject(originalReferences, Formatting.Indented);
+            TextWriter tsw = new StreamWriter(ProjectRootFolder + "\\.root" + "\\Dependencies.json");
+            tsw.Write(json);
+            tsw.Close();
+
+            //MessageBox.Show(ProjectDirectory + "\\" + SelectedFileName);
+
+            mainWindowViewModelLocal.ActivitiesView.Categories.Clear();
+            mainWindowViewModelLocal.SelectedDependencyPath.Add(ProjectDirectory + "\\" + SelectedFileName + ".dll");
+            mainWindowLocal.btnDeletePackage.Command.Execute(mainWindowLocal.btnDeletePackage.CommandParameter);
+            mainWindowViewModelLocal.RefreshToolbox();
+            RefreshSolutionList();
+            GetDependencies();
+            GetDependencies().IsExpanded = true;
+            GetDependencies().Items.Refresh();
+        }
+
+        void AddDependency(object parameter)
+        {
+            //mainWindowViewModelLocal.ActivitiesView.Categories.Clear();
+            mainWindowLocal.btnAddReference.Command.Execute(mainWindowLocal.btnAddReference.CommandParameter);
+            // mainWindowViewModelLocal.AddReference();
+            //  mainWindowViewModelLocal.RefreshToolbox();
+            RefreshSolutionList();
+            GetDependencies();
+            GetDependencies().IsExpanded = true;
+            GetDependencies().Items.Refresh();
+          //  mainWindowViewModelLocal.AddAllAddReferencesToFileToToolBox(ProjectDirectory);
         }
         #endregion
 
@@ -377,8 +465,66 @@ namespace RPA_Workbench.ViewModels
 
         public void LoadWindow(string ProjectDirectory)
         {
+            CreateContextMenus();
             ListDirectory(SolutionTreeView, ProjectDirectory);
             RefreshSolutionList();
+          
+        }
+        ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu XamlcontextMenu;
+        ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu DependencycontextMenu;
+        void CreateContextMenus()
+        {
+            //XAML ContextMenu
+            XamlcontextMenu = new ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu();
+
+
+            ActiproSoftware.Windows.Controls.Ribbon.Controls.Button deleteButton = new Button();
+            deleteButton.Label = "Delete";
+            deleteButton.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/DeleteIcon.png", UriKind.RelativeOrAbsolute));
+           
+
+            ActiproSoftware.Windows.Controls.Ribbon.Controls.Button createFolderButton = new Button();
+            createFolderButton.Label = "Create Folder";
+            createFolderButton.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/Folder Dark -32.png", UriKind.RelativeOrAbsolute));
+    
+
+            ActiproSoftware.Windows.Controls.Ribbon.Controls.Button renameButton = new Button();
+            renameButton.Label = "Rename";   
+            renameButton.Command = OpenRenameDialogCommand;
+
+            ActiproSoftware.Windows.Controls.Ribbon.Controls.Button setAsMainButton = new Button();
+            setAsMainButton.Label = "Set as Main";
+            setAsMainButton.Command = SetAsMainCommand;
+
+
+            XamlcontextMenu.Items.Add(deleteButton);
+            XamlcontextMenu.Items.Add(createFolderButton);
+            XamlcontextMenu.Items.Add(renameButton);
+            XamlcontextMenu.Items.Add(setAsMainButton);
+
+
+            //Depedency ContextMenu
+            DependencycontextMenu = new ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu();
+
+            ActiproSoftware.Windows.Controls.Ribbon.Controls.Button addDependancy = new Button();
+            addDependancy.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/Add-Package - 32.png", UriKind.RelativeOrAbsolute));
+            addDependancy.Label = "Add Dependency";
+            addDependancy.Command = AddDepedencyCommand;
+
+            ActiproSoftware.Windows.Controls.Ribbon.Controls.Button deleteDependancy = new Button();
+            deleteDependancy.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/Remove-Package - 32.png", UriKind.RelativeOrAbsolute));
+            deleteDependancy.Label = "Remove Dependency";
+            deleteDependancy.Command = RemoveDepedencyCommand;
+
+
+            // addDependancy.Click += AddDependancy_Click;
+
+            DependencycontextMenu.Items.Add(addDependancy);
+            DependencycontextMenu.Items.Add(deleteDependancy);
+
+           
+
+            // CreateDirectoryNode().ContextMenu = contextMenu;
         }
 
         #region Bold Main File
@@ -446,7 +592,7 @@ namespace RPA_Workbench.ViewModels
             catch (Exception)
             {
 
-                throw;
+                //throw;
             }
 
         }
@@ -485,21 +631,29 @@ namespace RPA_Workbench.ViewModels
         {
             //Get Depedencies and show them
             var depedencyTree = new TreeViewItem { Header = "Dependencies" };
+            depedencyTree.AllowDrop = false;
+
+            depedencyTree.ContextMenu = DependencycontextMenu;
+           
             StreamReader streamReader = new StreamReader(ProjectDirectory + "\\.root" + "\\Dependencies.json");
 
             string DependecyFileContents = streamReader.ReadToEnd();
             List<Reference> originalReferences = JsonConvert.DeserializeObject<List<Reference>>(DependecyFileContents);
-
-            foreach (var item in originalReferences)
+            if (originalReferences != null)
             {
-                depedencyTree.Items.Add(new TreeViewItem { Header = item.Name + ".dll" });
+                foreach (var item in originalReferences)
+                {
+                    depedencyTree.Items.Add(new TreeViewItem { Header = item.Name + ".dll" });
+                }
             }
+            streamReader.Close();
 
             return depedencyTree;
         }
         private TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo)
         {
             var directoryNode = new TreeViewItem { Header = directoryInfo.Name };
+            directoryNode.ContextMenu = XamlcontextMenu;
             directoryNode.Items.Add(GetDependencies());
             foreach (var directory in directoryInfo.GetDirectories())
             {
