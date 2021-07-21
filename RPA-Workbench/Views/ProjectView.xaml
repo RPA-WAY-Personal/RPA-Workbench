@@ -31,14 +31,14 @@
                     </Setter>
                 </Style>
             </TreeView.Resources>
-            <TreeView.ContextMenu>
+            <!--<TreeView.ContextMenu>
                 <ribbon:ContextMenu>
                     <ribbon:Button  x:Name="ContextBtnDelete" BorderBrush="{x:Null}" Background="{x:Null}" Label="Delete" ImageSourceSmall="/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/DeleteIcon.png"/>
                     <ribbon:Button  x:Name="ContextBtnCreateFolder" BorderBrush="{x:Null}" Background="{x:Null}" Label="Create Folder" ImageSourceSmall="/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/Folder Dark -32.png" />
                     <ribbon:Button Command="{Binding OpenRenameDialogCommand}"  x:Name="ContextBtnRename" BorderBrush="{x:Null}" Background="{x:Null}" Label="Rename"/>
                     <ribbon:Button Command="{Binding SetAsMainCommand}"  x:Name="ContextBtnSetAsMain" BorderBrush="{x:Null}" Background="{x:Null}" Label="Set as main"/>
                 </ribbon:ContextMenu>
-            </TreeView.ContextMenu>
+            </TreeView.ContextMenu>-->
         </TreeView>
         <ribbon:MiniToolBar x:Name="TopToolbar" VerticalAlignment="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
             <ribbon:Button Command="{Binding RefreshProjectListCommand}" ImageSourceSmall="/1. Resources/ProjectWindow Images/Refresh.png" x:Name="btnRefresh" Height="28" Width="28" Foreground="{x:Null}"  RenderTransformOrigin="2.542,0.539" BorderThickness="0,0,0,3" ImageSourceSmallSize="25,25" HorizontalContentAlignment="Center"/>

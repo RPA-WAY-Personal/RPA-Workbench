@@ -82,6 +82,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         private ICommand viewOutlineCommand;
         private ICommand abortCommand;
         private ICommand addReferenceCommand;
+        private ICommand removeReferenceCommand;
         private ICommand exitCommand;
         private ICommand saveAllWorkflowsCommand;
         private ICommand aboutCommand;
@@ -525,6 +526,23 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 return this.addReferenceCommand;
             }
         }
+        public string CategoryName;
+        public List<string> SelectedDependencyPath = new List<string>();
+        public ICommand RemoveReferenceCommand
+        {
+            get
+            {
+                if (this.removeReferenceCommand == null)
+                {
+                    
+                    this.removeReferenceCommand = new RelayCommand(
+                        param => this.RemoveActivitiesFromAssemblies(SelectedDependencyPath),
+                        param => this.CanAddReference);
+                }
+                
+                return this.removeReferenceCommand;
+            }
+        }
 
         public ICommand ExitCommand
         {
@@ -673,7 +691,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             get { return true; }
         }
 
-        private bool CanAddReference
+        public bool CanAddReference
         {
             get { return true; }
         }
@@ -1095,16 +1113,60 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             this.CreateOrUnhideDockableContent(ContentTypes.Outline, "Outline", "OutlineView");
         }
 
-        private void AddReference()
+        public void RefreshToolbox()
         {
-            OpenFileDialog fileDialog = WorkflowFileDialogFactory.CreateAddReferenceDialog();
-            if (fileDialog.ShowDialog() == true)
+            ActivitiesView.Categories.Clear();
+            toolboxControl.Categories.Clear();
+          //  InitialiseToolbox();
+            UpdateViews();
+        }
+        public void AddReference()
+        {
+            try
             {
-                this.AddActivitiesFromAssemblies(fileDialog.FileNames);
+                OpenFileDialog fileDialog = WorkflowFileDialogFactory.CreateAddReferenceDialog();
+                fileDialog.Multiselect = true;
+                if (fileDialog.ShowDialog() == true)
+                {
+                    //foreach (var filename in fileDialog.SafeFileNames)
+                    //{
+                    //    File.Copy(fileDialog.FileName, Environment.CurrentDirectory + "\\" + filename, true);
+                    //}
+                    this.AddActivitiesFromAssemblies(fileDialog.FileNames);
+                    this.AddAllAddReferencesToFileToToolBox(CurrentProjectPath);
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+          
         }
 
-       
+        public void AddReference(object parameters)
+        {
+            try
+            {
+                OpenFileDialog fileDialog = WorkflowFileDialogFactory.CreateAddReferenceDialog();
+                fileDialog.Multiselect = true;
+                if (fileDialog.ShowDialog() == true)
+                {
+                    //foreach (var filename in fileDialog.SafeFileNames)
+                    //{
+                    //    File.Copy(fileDialog.FileName, Environment.CurrentDirectory + "\\" + filename, true);
+                    //}
+                    this.AddActivitiesFromAssemblies(fileDialog.FileNames);
+                    this.AddAllAddReferencesToFileToToolBox(CurrentProjectPath);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+        }
+
+
         private void Exit()
         {
             if (!this.CancelCloseAllWorkflows())
@@ -1223,6 +1285,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                     typeof(Throw),
                     typeof(TryCatch),
                 });
+
         }
 
         private void AddActivitiesFromAssemblies(IEnumerable<string> assemblyFiles)
@@ -1253,9 +1316,30 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                     this.AddCategoryToToolbox(assemblies);
                 }
             }
-
         }
 
+        private void RemoveActivitiesFromAssemblies(IEnumerable<string> assemblyFiles)
+        {
+            foreach (var item in SelectedDependencyPath)
+            {
+                MessageBox.Show(item);
+            }
+            var assemblies = new List<Assembly>();
+            foreach (string fileName in assemblyFiles)
+            {
+                Assembly assembly = Assembly.LoadFrom(fileName);
+                assemblies.Add(assembly);
+                this.RemoveCategoryFromToolbox(assemblies);
+            }
+            toolboxControl = null;
+            toolboxControl = new ToolboxControl();
+            InitialiseToolbox();
+            ActivitiesView = toolboxControl;
+            //Check if there are any dependencies, then add them to the toolbox as well
+            this.AddAllAddReferencesToFileToToolBox(CurrentProjectPath);
+            UpdateViews();
+            //SelectedDependencyPath.Clear();
+        }
         //private void AddActivitiesFromAssemblies(List<Reference> assemblyFiles)
         //{
         //    var assemblies = new List<Assembly>();
@@ -1292,63 +1376,92 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 set { _fullname = value; }
             }
 
-            Version _version;
-            public Version Version
-            {
-                get { return _version; }
-                set { _version = value; }
-            }
+            //Version _version;
+            //public Version Version
+            //{
+            //    get { return _version; }
+            //    set { _version = value; }
+            //}
         }
+        List<Reference> references;
+        Reference reference;
         private void AddReferencesToFile(Assembly assembly)
         {
+            //Step 1. Create .root folder if it does not exist.
             if (Directory.Exists(CurrentProjectPath + "//.root") == false)
             {
                 Directory.CreateDirectory(CurrentProjectPath + "//.root");
             }
-            // MessageBox.Show(assembly.FullName);
 
-            Reference reference = new Reference
+            #region Different way to add to json
+            //Reference reference = new Reference
+            //{
+            //    Name = assembly.GetName().Name,
+            //    Location = assembly.Location,
+            //    FullName = assembly.FullName//,
+            //   // Version = assembly.GetName().Version
+            //};
+            #endregion
+
+            //Step 2. Read the Dependencies.json File and get any dependencies.
+            StreamReader streamReader = new StreamReader(CurrentProjectPath + "\\.root" + "\\Dependencies.json");
+            string DependecyFileContents = streamReader.ReadToEnd();
+
+            //Step 3. If Dependencies.json is empty start a new reference json array/list and add the depedency.
+            if (string.IsNullOrEmpty(DependecyFileContents))
             {
-                Name = assembly.GetName().Name,
-                Location = assembly.Location,
-                FullName = assembly.FullName//,
-               // Version = assembly.GetName().Version
-            };
+                references = new List<Reference>();
+                reference = new Reference
+                {
+                    Name = assembly.GetName().Name,
+                    Location = assembly.Location,
+                    FullName = assembly.FullName//,
+                   // Version = assembly.GetName().Version
+                };
+                references.Add(reference);
+            }
+            else //If Dep file contains depedencies already, make a copy of them, add new one and add the old ones
+            {
+                references = new List<Reference>();
+                List<Reference> originalReferences = JsonConvert.DeserializeObject<List<Reference>>(DependecyFileContents);
+                reference = new Reference
+                {
+                    Name = assembly.GetName().Name,
+                    Location = assembly.Location,
+                    FullName = assembly.FullName
+                };
+                bool exists = false;
+                //Add Original References, that was in the file again.
+                foreach (var item in originalReferences)
+                {
+                    references.Add(item);
+                }
+                //Check if reference exists in dependencies already, if it does DO NOT ADD, Else ADD
+                foreach (var item in originalReferences)
+                {
+                    if (item.FullName == reference.FullName)
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (exists == false)
+                {
+                    references.Add(reference);
+                }
+            }
 
-            List<Reference> references = new List<Reference>();
-            references.Add(reference);
+            //Step 4. Close the reader, otherwise it will say the Dependencies.json, is being used by another process
+            streamReader.Close();
 
+            //Step 5. Serialize the references to json array
             string json = JsonConvert.SerializeObject(references, Formatting.Indented);
-            //JObject ReferenceJson = new JObject(
-            //new JProperty("Name", assembly.GetName().Name),
-            //new JProperty("Location", assembly.Location),
-            //new JProperty("Fullname", assembly.FullName));
 
-            //File.WriteAllText(CurrentProjectPath + "\\.root" + "\\Dependencies.json", json);
-            TextWriter tsw = new StreamWriter(CurrentProjectPath + "\\.root" + "\\Dependencies.json", true);
+            //Step 6. write the json to the Dependencies.json File.
+            TextWriter tsw = new StreamWriter(CurrentProjectPath + "\\.root" + "\\Dependencies.json");
             tsw.Write(json);
             tsw.Close();
-            //JsonControls jsonControls = new JsonControls();
-            //jsonControls.ReadJsonFile(CurrentProjectPath + "\\.root" + "\\Dependencies.json");
-            //jsonControls.DeserializeJsonObject();
 
-            //if (jsonControls.GetKeyValue("Name") == assembly.GetName().Name)
-            //{
-
-            //}
-            //else
-            //{
-            //    TextWriter tsw = new StreamWriter(CurrentProjectPath + "\\.root" + "\\Dependencies.json", true);
-            //    tsw.Write(json);
-            //    tsw.Close();
-            // //  File.WriteAllText(CurrentProjectPath + "\\.root" + "\\Dependencies.json", ReferenceJson.ToString());
-            //}
-
-
-            // JsonControls jsonControls = new JsonControls();
-
-            // MessageBox.Show(CurrentProjectPath);
-            //jsonControls.CreateNewJsonFile(CurrentProjectPath + "//.root", "Dependencies", "Dependancies", assembly.Location);
         }
 
         public void AddAllAddReferencesToFileToToolBox()
@@ -1394,7 +1507,6 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 List<Reference> products = JsonConvert.DeserializeObject<List<Reference>>(File.ReadAllText(JsonFile));
                 AddActivitiesFromAssemblies(products);
                 UpdateViews();
-
             }
 
         }
@@ -1464,6 +1576,26 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                     {
                         this.loadedToolboxActivities[category].Add(activityType.FullName);
                         category.Add(new ToolboxItemWrapper(activityType.FullName, activityType.Assembly.FullName, null, activityType.Name));
+                    }
+                }
+            }
+        }
+
+        private void RemoveCategoryFromToolbox(List<Assembly> assemblies)
+        {
+            foreach (Assembly assembly in assemblies)
+            {
+                foreach (Type activityType in assembly.GetTypes())
+                {
+                    if (this.IsValidToolboxActivity(activityType))
+                    {
+                        ToolboxCategory category = this.GetToolboxCategory(activityType.Namespace);
+
+                        if (!this.loadedToolboxActivities[category].Contains(activityType.FullName))
+                        {
+                            this.loadedToolboxActivities[category].Remove(activityType.FullName);
+                            category.Remove(new ToolboxItemWrapper(activityType.FullName, activityType.Assembly.FullName, null, activityType.Name));
+                        }
                     }
                 }
             }

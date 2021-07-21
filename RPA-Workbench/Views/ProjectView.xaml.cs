@@ -24,7 +24,7 @@ namespace RPA_Workbench.Views
         {
             InitializeComponent();
             ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu contextMenu = new ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu();
-            projectWindowViewModel.ProjectWindowHookup(SolutionTreeViewBox, mainWindow, contextMenu,mainWindow.mainWindowViewModel);
+            projectWindowViewModel.ProjectWindowHookup(SolutionTreeViewBox, mainWindow, contextMenu, mainWindow.mainWindowViewModel);
             this.DataContext = projectWindowViewModel;
         }
     }

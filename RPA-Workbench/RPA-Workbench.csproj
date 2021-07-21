@@ -363,5 +363,15 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1. Resources\ProjectWindow Images\DepTree-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1. Resources\ProjectWindow Images\DepTreeItem-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1. Resources\ProjectWindow Images\Add-Package - 32.png" />
+    <Resource Include="1. Resources\ProjectWindow Images\Remove-Package - 32.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
