@@ -599,44 +599,6 @@ namespace RPA_Workbench.ViewModels
                 treeView.Items.Add(createDirectoryNode);
 
                 createDirectoryNode.Items.Insert(0, GetDependencies());
-
-              //  MessageBox.Show("Dir Name is: " + createDirectoryNode.Header.ToString());
-                //string newname = createDirectoryNode.Header.ToString().Remove(createDirectoryNode.Header.ToString().Length,8);
-               // MessageBox.Show(newname);
-                //if (treeView.Items[0].ToString().Contains(".rpaproj"))
-                //{
-                //    treeView.Items[0].ToString().Replace(treeView.Items[0].ToString(), )
-                //}
-            
-                //if (createDirectoryNode.Header.ToString().Contains(".rpaproj"))
-                //{
-                //    string newName = createDirectoryNode.Header.ToString().Remove(createDirectoryNode.Header.ToString().Length, 8);
-                //    MessageBox.Show("NEW NAME: " + newName);
-                //    createDirectoryNode.Header = createDirectoryNode.Header.ToString().Replace(createDirectoryNode.Header.ToString(), newName);
-                //    treeView.Items.Add(createDirectoryNode);
-                //}
-                //foreach (TreeViewItem item in treeView.Items)
-                //{
-                //    MessageBox.Show(item.Header.ToString());
-                //    if (item.Header.ToString().Contains(".rpaproj"))
-                //    {
-                //        string newName = createDirectoryNode.Header.ToString().Remove(createDirectoryNode.Header.ToString().Length, 8);
-                //        MessageBox.Show("NEW NAME: " + newName);
-                //        createDirectoryNode.Header = createDirectoryNode.Header.ToString().Replace(createDirectoryNode.Header.ToString(), newName);
-                //        treeView.Items.Add(createDirectoryNode);
-                //    }
-                //}
-              
-
-                //ListDirectory(treeView, path);
-                //CreateDirectoryNode(rootDirectoryInfo).Items.Add(GetDependencies());
-                //if (SolutionTreeView.Items.Contains(GetDependencies()) == false)
-                //{
-                //    //MessageBox.Show("Dependecy Tree Exists");
-
-                //}
-                //TreeView Setups
-
             }
             catch (Exception)
             {
