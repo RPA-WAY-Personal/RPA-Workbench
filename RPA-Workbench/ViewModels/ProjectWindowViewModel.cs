@@ -60,6 +60,10 @@ namespace RPA_Workbench.ViewModels
             //Button Events
             RelaySetup();
 
+
+           
+
+
             //Solution Tree View Events
             SolutionTreeView.MouseDown += SolutionTreeview_MouseDown;
             SolutionTreeView.MouseMove += SolutionTreeview_MouseMove;
@@ -68,6 +72,8 @@ namespace RPA_Workbench.ViewModels
             SolutionTreeView.SelectedItemChanged += SolutionTreeViewBox_SelectedItemChanged;
             SolutionTreeView.MouseDoubleClick += SolutionTreeview_MouseDoubleClick;
             LocalcontextMenu = contextMenu;
+
+
         }
 
 
@@ -587,7 +593,50 @@ namespace RPA_Workbench.ViewModels
             {
                 treeView.Items.Clear();
                 var rootDirectoryInfo = new DirectoryInfo(path);
-                treeView.Items.Add(CreateDirectoryNode(rootDirectoryInfo));
+                TreeViewItem createDirectoryNode = CreateDirectoryNode(rootDirectoryInfo);
+
+                createDirectoryNode.Header = createDirectoryNode.Header + ".project";
+                treeView.Items.Add(createDirectoryNode);
+
+                createDirectoryNode.Items.Insert(0, GetDependencies());
+
+              //  MessageBox.Show("Dir Name is: " + createDirectoryNode.Header.ToString());
+                //string newname = createDirectoryNode.Header.ToString().Remove(createDirectoryNode.Header.ToString().Length,8);
+               // MessageBox.Show(newname);
+                //if (treeView.Items[0].ToString().Contains(".rpaproj"))
+                //{
+                //    treeView.Items[0].ToString().Replace(treeView.Items[0].ToString(), )
+                //}
+            
+                //if (createDirectoryNode.Header.ToString().Contains(".rpaproj"))
+                //{
+                //    string newName = createDirectoryNode.Header.ToString().Remove(createDirectoryNode.Header.ToString().Length, 8);
+                //    MessageBox.Show("NEW NAME: " + newName);
+                //    createDirectoryNode.Header = createDirectoryNode.Header.ToString().Replace(createDirectoryNode.Header.ToString(), newName);
+                //    treeView.Items.Add(createDirectoryNode);
+                //}
+                //foreach (TreeViewItem item in treeView.Items)
+                //{
+                //    MessageBox.Show(item.Header.ToString());
+                //    if (item.Header.ToString().Contains(".rpaproj"))
+                //    {
+                //        string newName = createDirectoryNode.Header.ToString().Remove(createDirectoryNode.Header.ToString().Length, 8);
+                //        MessageBox.Show("NEW NAME: " + newName);
+                //        createDirectoryNode.Header = createDirectoryNode.Header.ToString().Replace(createDirectoryNode.Header.ToString(), newName);
+                //        treeView.Items.Add(createDirectoryNode);
+                //    }
+                //}
+              
+
+                //ListDirectory(treeView, path);
+                //CreateDirectoryNode(rootDirectoryInfo).Items.Add(GetDependencies());
+                //if (SolutionTreeView.Items.Contains(GetDependencies()) == false)
+                //{
+                //    //MessageBox.Show("Dependecy Tree Exists");
+
+                //}
+                //TreeView Setups
+
             }
             catch (Exception)
             {
@@ -650,11 +699,13 @@ namespace RPA_Workbench.ViewModels
 
             return depedencyTree;
         }
-        private TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo)
+        private TreeViewItem CreateDirectoryNode(DirectoryInfo directoryInfo = null)
         {
             var directoryNode = new TreeViewItem { Header = directoryInfo.Name };
             directoryNode.ContextMenu = XamlcontextMenu;
-            directoryNode.Items.Add(GetDependencies());
+
+           
+
             foreach (var directory in directoryInfo.GetDirectories())
             {
                 if (directory.Name.Contains("json") || directory.Name.StartsWith("."))
@@ -663,6 +714,8 @@ namespace RPA_Workbench.ViewModels
                 }
                 directoryNode.Items.Add(CreateDirectoryNode(directory));
             }
+
+
 
 
             foreach (var file in directoryInfo.GetFiles())
@@ -674,7 +727,9 @@ namespace RPA_Workbench.ViewModels
                 directoryNode.Items.Add(new TreeViewItem { Header = file.Name });
             }
 
-        
+
+          
+
 
             return directoryNode;
 
@@ -743,7 +798,7 @@ namespace RPA_Workbench.ViewModels
                         (Math.Abs(currentPosition.Y - _lastMouseDown.Y) > 10.0))
                     {
                         draggedItem = (TreeViewItem)SolutionTreeView.SelectedItem;
-                        if (draggedItem != null)
+                        if (draggedItem != null && draggedItem.Header.ToString().Contains("Dependencies") == false && draggedItem.Header.ToString().Contains("dll") == false)
                         {
                             DragDropEffects finalDropEffect =
                 DragDrop.DoDragDrop(SolutionTreeView,
@@ -786,20 +841,26 @@ namespace RPA_Workbench.ViewModels
             bool _isEqual = false;
             try
             {
-                //Check whether the target item is meeting your condition
-                if (_targetItem != null || _sourceItem != null)
+                //if ((_targetItem == null || _sourceItem == null)
+                //{
+                //    return;
+                //}
+              //  else  //Check whether the target item is meeting your condition
+                if (_targetItem != null || _sourceItem != null || string.IsNullOrEmpty(_targetItem.Header.ToString()) == false)
                 {
-                    if (!_sourceItem.Header.ToString().Equals(_targetItem.Header.ToString()))
+                    if (!_sourceItem.Header.ToString().Equals(_targetItem.Header.ToString()) && _targetItem.Header.ToString().Contains("xaml") == false &&
+                        _targetItem.Header.ToString().Contains("dll") == false || _targetItem.Header.ToString().Contains("Dependencies") == false ||
+                        _sourceItem.Header.ToString().Contains("Dependencies") == false)
                     {
                         _isEqual = true;
                         RefreshSolutionList();
                         //	ListDirectory(SolutionTreeViewBox, ProjectDirectory);
                     }
                 }
-
             }
-            catch (NullReferenceException )
+            catch (NullReferenceException ex)
             {
+                Console.WriteLine(ex.Message);
             }
             return _isEqual;
 

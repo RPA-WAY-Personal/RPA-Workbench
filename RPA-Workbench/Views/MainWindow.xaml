@@ -114,7 +114,7 @@
             <ribbon:Ribbon x:Name="MainRibbon" VerticalAlignment="Top" Width="auto" DockPanel.Dock="Top"  IsQuickAccessToolBarCustomizeButtonVisible="False" ApplicationButtonLabel="Home">
                 <!--Design Tab-->
                 <ribbon:Tab x:Name="RibbonTabDesign" Label="Design">
-                    <ribbon:Group Label="Execute">
+                    <ribbon:Group Label="Execute" Width="88">
                         <ribbon:SplitButton Command="{Binding Path=SaveWorkflowCommand}" x:Name="btnRibbonSaveButtonParent" Label="Save">
                             <ribbon:SplitButton.ImageSourceLarge>
                                 <BitmapImage UriSource="/RPA-Workbench-Revision2;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Save.png" UriCachePolicy="{x:Null}"/>
@@ -139,7 +139,7 @@
                             </ribbon:Menu>
                         </ribbon:SplitButton>
 
-                        <ribbon:SplitButton Command="{Binding Path=AddReferenceCommand}"  x:Name="btnAddReference" Label="Add Package" ImageSourceSmallSize="512,512" ImageSourceSmall="/RPA-Workbench-Revision2;component/1. Resources/MainWindow Images/Top Ribbon Images/AddReference.png">
+                        <ribbon:SplitButton Visibility="Hidden" Command="{Binding Path=AddReferenceCommand}"  x:Name="btnAddReference" Label="Add Package" ImageSourceSmallSize="512,512" ImageSourceSmall="/RPA-Workbench-Revision2;component/1. Resources/MainWindow Images/Top Ribbon Images/AddReference.png">
                             <ribbon:Menu>
                                 <ribbon:Button x:Name="btnDeletePackage" Command="{Binding Path=RemoveReferenceCommand}" Label="Remove" ImageSourceSmall="/RPA-Workbench-Revision2;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Debug.png" ></ribbon:Button>
                             </ribbon:Menu>

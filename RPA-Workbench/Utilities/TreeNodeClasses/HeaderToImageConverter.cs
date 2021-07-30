@@ -48,9 +48,23 @@ namespace RPA_Workbench.Utilities.TreeNodeClasses
                 source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/DepTreeItem-32.png"));
                 return source;
             }
+
+            if ((value as string).Contains(".project"))
+            {
+                //System.Windows.Forms.MessageBox.Show @value.ToString()))'
+                //Icon IEIcon = Icon.ExtractAssociatedIcon(@value.ToString());
+                //System.Drawing.Image source = IEIcon.ToBitmap();
+
+                //Uri uri = new Uri("pack://application:,,,/RPA Workbench;component//Resources/FolderIcon_ExcelGreen.png");
+                //BitmapImage source = new BitmapImage(uri);
+                source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/ProjectRoot-32.png"));
+                return source;
+            }
+
+
             //if (Properties.Settings.Default.ThemeType == 0)
             //{
-            if ((value as string).Contains(@"\"))
+            if ((value as string).Contains("\\"))
                 {
                     // Uri uri = new Uri("pack://application:,,,/RPA Workbench;component//Resources/FolderIcon_ExcelGreen.png");
                      source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/Folder Dark -32.png"));
@@ -67,8 +81,8 @@ namespace RPA_Workbench.Utilities.TreeNodeClasses
                      source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/Folder Dark -32.png"));
                     return source;
                 }
+            
 
-           
             //}
             //else if (Properties.Settings.Default.ThemeType == 1)
             //{

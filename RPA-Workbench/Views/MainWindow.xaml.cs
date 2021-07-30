@@ -41,6 +41,7 @@ namespace RPA_Workbench
 			//ThemeManager.BeginUpdate(); 
 			//ThemeManager.EndUpdate();
 			SerializeSetupOnLoad();
+			SetToolWindowOptions();
 		}
 
         public void ReloadMainWindowModel(String CurrentProjectPath, Views.BackstageMenu backstageMenuOptionalAssign = null)
@@ -48,7 +49,20 @@ namespace RPA_Workbench
             mainWindowViewModel = new ViewModels.WorkflowStudioIntegration.MainWindowViewModel(PropertiesToolWindow, OutlineToolwindow, OutputToolWindow, ErrorListToolWindow, DebuggerToolWindow, MainDockSite, MDIHost, DebuggerToolWindow, this, backstageMenuOptionalAssign, CurrentProjectPath);
             DataContext = mainWindowViewModel;
             mainWindowViewModel.AddAllAddReferencesToFileToToolBox(CurrentProjectPath);
-        }
+			SetToolWindowOptions();
+
+		}
+
+		public void SetToolWindowOptions()
+        {
+			PropertiesToolWindow.CanClose = false;
+			ProjectToolWindow.CanClose = false;
+			ActivitiesToolWindow.CanClose = false;
+			OutlineToolwindow.CanClose = false;
+			OutputToolWindow.CanClose = false;
+			ErrorListToolWindow.CanClose = false;
+			DebuggerToolWindow.CanClose = false;
+		}
 
 		#region Layout Serializer
 		//LAYOUT SERIALIZER
