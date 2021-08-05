@@ -294,16 +294,54 @@ namespace RPA_Workbench.ViewModels
         }
         void SetAsMain(object parameter)
         {
+            FileInfo fileInfo = null;
+            string cleanedFileName = "";
             JsonControls jsonControls = new JsonControls();
             jsonControls.ReadJsonFile(ProjectRootFolder + "\\Project.json");
             jsonControls.DeserializeJsonObject();
             if (SelectedFileName.Contains(".xaml"))
             {
-                string cleanedFileName = SelectedFileName.Remove(SelectedFileName.Length - 5);
-                jsonControls.ChangeKeyString("Main", cleanedFileName);
+                fileInfo = new FileInfo(SelectedFilePath);
+               // MessageBox.Show(fileInfo.Directory.Name);
+            
+                if (fileInfo.Directory.FullName == jsonControls.GetKeyValue("ProjectPath"))
+                {
+                    cleanedFileName = SelectedFileName.Remove(SelectedFileName.Length - 5);
+                    jsonControls.ChangeKeyString("Main", cleanedFileName);
+                }
+                else
+                {
+                    cleanedFileName = fileInfo.Directory.Name + "\\" + SelectedFileName.Remove(SelectedFileName.Length - 5);
+                    jsonControls.ChangeKeyString("Main", cleanedFileName);
+                }
+
             }
-         
-            RefreshSolutionList();
+            int nodeCount = 0;
+            foreach (TreeViewItem item in SolutionTreeView.Items)
+            {
+                //MessageBox.Show("Item header: " + item.Header.ToString());
+                //MessageBox.Show("Item header with project path: " + jsonControls.GetKeyValue("ProjectPath") + "\\" + item.Header.ToString());
+                //MessageBox.Show("fileInfo FullName: " + fileInfo.FullName);
+                string FullNameCleaned = "";
+                if (fileInfo.FullName.Contains(".xaml"))
+                {
+                    FullNameCleaned = fileInfo.FullName.Remove(fileInfo.FullName.Length - 5);
+                }
+                if (item.Header.ToString().Contains(".xaml"))
+                {
+                    item.Header = item.Header.ToString().Remove(item.Header.ToString().Length - 5);
+                }
+                //MessageBox.Show("Item header after cleaning: " + FullNameCleaned);
+                //MessageBox.Show("Item header with project path after cleaning: " + jsonControls.GetKeyValue("ProjectPath") + "\\" + item.Header.ToString());
+                //MessageBox.Show("fileInfo FullName: " + fileInfo.FullName);
+                if (jsonControls.GetKeyValue("ProjectPath") + "\\" + item.Header.ToString() == FullNameCleaned)
+                {
+                    MessageBox.Show(item.ToString());
+                    RefreshSolutionList(2);
+                }
+              
+            }
+           // RefreshSolutionList();
         }
 
         void RemoveDependency(object parameter)
@@ -345,10 +383,24 @@ namespace RPA_Workbench.ViewModels
             mainWindowViewModelLocal.SelectedDependencyPath.Add(ProjectDirectory + "\\" + SelectedFileName + ".dll");
             mainWindowLocal.btnDeletePackage.Command.Execute(mainWindowLocal.btnDeletePackage.CommandParameter);
             mainWindowViewModelLocal.RefreshToolbox();
-            RefreshSolutionList();
-            GetDependencies();
-            GetDependencies().IsExpanded = true;
-            GetDependencies().Items.Refresh();
+            //RefreshSolutionList();
+           // SolutionTreeView.Items.Remove(GetDependencies());
+   
+            foreach (TreeViewItem item in SolutionTreeView.Items)
+            {
+                if (item.Header == "Dependencies")
+                {
+                    item.IsExpanded = true;
+                    SolutionTreeView.Items.Refresh();
+                    item.IsExpanded = true;
+                }
+            }
+          //  SolutionTreeView.Items.Add(GetDependencies());
+      
+           // RefreshSolutionList();
+            //GetDependencies();
+            //GetDependencies().IsExpanded = true;
+            //GetDependencies().Items.Refresh();
         }
 
         void AddDependency(object parameter)
@@ -487,7 +539,7 @@ namespace RPA_Workbench.ViewModels
             ActiproSoftware.Windows.Controls.Ribbon.Controls.Button deleteButton = new Button();
             deleteButton.Label = "Delete";
             deleteButton.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/DeleteIcon.png", UriKind.RelativeOrAbsolute));
-           
+            deleteButton.Command = DeleteFileorFolderCommand;
 
             ActiproSoftware.Windows.Controls.Ribbon.Controls.Button createFolderButton = new Button();
             createFolderButton.Label = "Create Folder";
@@ -534,13 +586,13 @@ namespace RPA_Workbench.ViewModels
         }
 
         #region Bold Main File
-        void IterateThroughSolutionView()
+        void IterateThroughSolutionView(int MainFileLevel = 0)
         {
             StringBuilder l_builder = new StringBuilder();
 
             foreach (TreeViewItem l_item in SolutionTreeView.Items)
             {
-                ProcessNodes(l_item, l_builder, 0);
+                ProcessNodes(l_item, l_builder, MainFileLevel);
             }
 
             //MessageBox.Show(l_builder.ToString());
@@ -571,16 +623,16 @@ namespace RPA_Workbench.ViewModels
                     {
                         l_innerNode.FontWeight = FontWeights.Normal;
                     }
-                    ProcessNodes(l_innerNode, builder, level + 1);
+                    ProcessNodes(l_innerNode, builder, level);
                 }
                
             }
         }
         #endregion
-        public void RefreshSolutionList()
+        public void RefreshSolutionList(int MainFileLevel = 0)
         {
             ListDirectory(SolutionTreeView, ProjectDirectory);
-            IterateThroughSolutionView();
+            IterateThroughSolutionView(MainFileLevel);
            // var header  = (string)((TreeViewItem)SolutionTreeView.SelectedItem).Header;
             foreach (TreeViewItem item in SolutionTreeView.Items)
             {
@@ -595,7 +647,7 @@ namespace RPA_Workbench.ViewModels
                 var rootDirectoryInfo = new DirectoryInfo(path);
                 TreeViewItem createDirectoryNode = CreateDirectoryNode(rootDirectoryInfo);
 
-                createDirectoryNode.Header = createDirectoryNode.Header + ".project";
+                //createDirectoryNode.Header = createDirectoryNode.Header + ".project"; //To give top node solution icon
                 treeView.Items.Add(createDirectoryNode);
 
                 createDirectoryNode.Items.Insert(0, GetDependencies());

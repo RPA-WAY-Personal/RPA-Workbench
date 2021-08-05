@@ -557,7 +557,11 @@ namespace RPA_Workbench.ViewModels.StartupMenu
 
                     if (File.Exists(ProjectPath + "\\.root" + "\\Dependencies.json") == false)
                     {
-                        File.Create(ProjectPath + "\\.root" + "\\Dependencies.json");
+                        StreamWriter streamWriter = new StreamWriter(ProjectPath + "\\.root" + "\\Dependencies.json");
+                        streamWriter.Write("");
+                        streamWriter.Close();
+                        //NOTE: Do not use File.Create(ProjectPath + "\\.root" + "\\Dependencies.json"), as it does not close the stream.
+
                     }
 
                     backstageMenuModel.CanBackstageClose = true;
