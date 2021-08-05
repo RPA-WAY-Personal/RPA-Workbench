@@ -818,9 +818,10 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             json = File.ReadAllText(CurrentProjectPath + "\\project.json");
             jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
             string ProjectCurrentDirectory = jsonObj["ProjectPath"];
-            model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"] + ".xaml";
-            model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"] + ".xaml");
-
+            // model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"] + ".xaml";
+            //  model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"] + ".xaml");
+            model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"];
+              model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
             if (model != null)
             {
                 model.RunWorkflow();

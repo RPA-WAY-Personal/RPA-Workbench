@@ -29,7 +29,7 @@ namespace RPA_Workbench.ViewModels
 {
     public class ProjectWindowViewModel
     {
-      
+        #region Variables
         //Moving
         private Point _lastMouseDown;
         private TreeViewItem draggedItem, _target;
@@ -51,32 +51,9 @@ namespace RPA_Workbench.ViewModels
         public ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu LocalcontextMenu = new ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu();
 
         private ViewModels.WorkflowStudioIntegration.MainWindowViewModel mainWindowViewModelLocal;
-        public void ProjectWindowHookup(TreeView treeView,
-            MainWindow mainWindow, ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu contextMenu, ViewModels.WorkflowStudioIntegration.MainWindowViewModel mainWindowViewModel)
-        {
-            mainWindowLocal = mainWindow;
-            mainWindowViewModelLocal = mainWindowViewModel;
-            _solutionTreeview = treeView;
-            //Button Events
-            RelaySetup();
+        #endregion
 
-
-           
-
-
-            //Solution Tree View Events
-            SolutionTreeView.MouseDown += SolutionTreeview_MouseDown;
-            SolutionTreeView.MouseMove += SolutionTreeview_MouseMove;
-            SolutionTreeView.DragOver += SolutionTreeview_DragOver;
-            SolutionTreeView.Drop += SolutionTreeview_Drop;
-            SolutionTreeView.SelectedItemChanged += SolutionTreeViewBox_SelectedItemChanged;
-            SolutionTreeView.MouseDoubleClick += SolutionTreeview_MouseDoubleClick;
-            LocalcontextMenu = contextMenu;
-
-
-        }
-
-
+        #region MVVM
         void RelaySetup()
         {
             OpenProjectSettingsCommand = new RelayCommand(new Action<object>(OpenProjectSettings));
@@ -88,6 +65,7 @@ namespace RPA_Workbench.ViewModels
             RemoveDepedencyCommand = new RelayCommand(new Action<object>(RemoveDependency));
             AddDepedencyCommand = new RelayCommand(new Action<object>(AddDependency));
         }
+        #endregion
 
         #region ICommands
         private TreeView _solutionTreeview;
@@ -203,7 +181,7 @@ namespace RPA_Workbench.ViewModels
 
         #endregion
 
-        #region Methods/Functions
+        #region Methods/Functions Commands
         void OpenProjectSettings(object parameter)
         {
             //ProjectSettings projectSettings = new ProjectSettings();
@@ -306,13 +284,14 @@ namespace RPA_Workbench.ViewModels
             
                 if (fileInfo.Directory.FullName == jsonControls.GetKeyValue("ProjectPath"))
                 {
-                    cleanedFileName = SelectedFileName.Remove(SelectedFileName.Length - 5);
-                    jsonControls.ChangeKeyString("Main", cleanedFileName);
+                    //SelectedImagePath.Remove(jsonControls.GetKeyValue("Name").Length);
+                    jsonControls.ChangeKeyString("Main", SelectedFileName);
                 }
                 else
                 {
-                    cleanedFileName = fileInfo.Directory.Name + "\\" + SelectedFileName.Remove(SelectedFileName.Length - 5);
-                    jsonControls.ChangeKeyString("Main", cleanedFileName);
+                    SelectedImagePath.Remove(jsonControls.GetKeyValue("Name").Length);
+                    //MessageBox.Show(SelectedImagePath);
+                    jsonControls.ChangeKeyString("Main", SelectedImagePath);
                 }
 
             }
@@ -343,7 +322,6 @@ namespace RPA_Workbench.ViewModels
             }
            // RefreshSolutionList();
         }
-
         void RemoveDependency(object parameter)
         {
             StreamReader streamReader = new StreamReader(ProjectDirectory + "\\.root" + "\\Dependencies.json");
@@ -402,7 +380,6 @@ namespace RPA_Workbench.ViewModels
             //GetDependencies().IsExpanded = true;
             //GetDependencies().Items.Refresh();
         }
-
         void AddDependency(object parameter)
         {
             //mainWindowViewModelLocal.ActivitiesView.Categories.Clear();
@@ -419,12 +396,11 @@ namespace RPA_Workbench.ViewModels
 
         #region Events
 
-        #endregion
         private void SolutionTreeViewBox_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             TreeView tree = (TreeView)sender;
             TreeViewItem temp = ((TreeViewItem)tree.SelectedItem);
-
+            
             if (temp == null)
                 return;
             SelectedImagePath = "";
@@ -446,17 +422,22 @@ namespace RPA_Workbench.ViewModels
                 temp2 = @"\";
             }
 
-            //show user selected path
-            //SelectedFileName
+            #region Debugging
+            //MessageBox.Show("SelectedImagePath : " + SelectedImagePath);
             //MessageBox.Show(temp.ToString());
-            string fileName = (string)((TreeViewItem)SolutionTreeView.SelectedItem).Header;
             //MessageBox.Show(ProjectRootFolder + "\\" + fileName);
+            //MessageBox.Show(jsonControls.GetKeyValue("Name"));
+            #endregion
+
+
+            string fileName = (string)((TreeViewItem)SolutionTreeView.SelectedItem).Header;
+
             SelectedFileName = fileName;
             JsonControls jsonControls = new JsonControls();
             jsonControls.ReadJsonFile(ProjectRootFolder + "//" + "project.json");
 
             jsonControls.DeserializeJsonObject();
-            //MessageBox.Show(jsonControls.GetKeyValue("Name"));
+
             if (SelectedImagePath.Contains(jsonControls.GetKeyValue("Name")))
             {
                 SelectedImagePath = SelectedImagePath.Replace(jsonControls.GetKeyValue("Name"), "");
@@ -521,6 +502,33 @@ namespace RPA_Workbench.ViewModels
 
         }
 
+        #endregion
+
+        #region Methods
+        public void ProjectWindowHookup(TreeView treeView,
+            MainWindow mainWindow, ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu contextMenu, ViewModels.WorkflowStudioIntegration.MainWindowViewModel mainWindowViewModel)
+        {
+            mainWindowLocal = mainWindow;
+            mainWindowViewModelLocal = mainWindowViewModel;
+            _solutionTreeview = treeView;
+            //Button Events
+            RelaySetup();
+
+
+           
+
+
+            //Solution Tree View Events
+            SolutionTreeView.MouseDown += SolutionTreeview_MouseDown;
+            SolutionTreeView.MouseMove += SolutionTreeview_MouseMove;
+            SolutionTreeView.DragOver += SolutionTreeview_DragOver;
+            SolutionTreeView.Drop += SolutionTreeview_Drop;
+            SolutionTreeView.SelectedItemChanged += SolutionTreeViewBox_SelectedItemChanged;
+            SolutionTreeView.MouseDoubleClick += SolutionTreeview_MouseDoubleClick;
+            LocalcontextMenu = contextMenu;
+
+
+        }
         public void LoadWindow(string ProjectDirectory)
         {
             CreateContextMenus();
@@ -528,6 +536,7 @@ namespace RPA_Workbench.ViewModels
             RefreshSolutionList();
           
         }
+
         ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu XamlcontextMenu;
         ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu DependencycontextMenu;
         void CreateContextMenus()
@@ -584,55 +593,9 @@ namespace RPA_Workbench.ViewModels
 
             // CreateDirectoryNode().ContextMenu = contextMenu;
         }
-
-        #region Bold Main File
-        void IterateThroughSolutionView(int MainFileLevel = 0)
-        {
-            StringBuilder l_builder = new StringBuilder();
-
-            foreach (TreeViewItem l_item in SolutionTreeView.Items)
-            {
-                ProcessNodes(l_item, l_builder, MainFileLevel);
-            }
-
-            //MessageBox.Show(l_builder.ToString());
-        }
-        private void ProcessNodes(TreeViewItem node, StringBuilder builder, int level)
-        {
-            JsonControls jsonControls = new JsonControls();
-            jsonControls.ReadJsonFile(ProjectRootFolder + "\\Project.json");
-            jsonControls.DeserializeJsonObject();
-            string cleanedFileName = "";
-            if (SelectedFileName != null)
-            {
-                cleanedFileName = SelectedFileName.Remove(SelectedFileName.Length - 5);
-            }
-
-            builder.Append(new string('\t', level) + node.Header.ToString() + Environment.NewLine);
-
-            foreach (TreeViewItem l_innerNode in node.Items)
-            {
-                if (l_innerNode.Header.ToString().Contains(".xaml"))
-                {
-                    string _cleanedFileName = l_innerNode.Header.ToString().Remove(l_innerNode.Header.ToString().Length - 5);
-                    if (jsonControls.GetKeyValue("Main") == _cleanedFileName)
-                    {
-                        l_innerNode.FontWeight = FontWeights.Bold;
-                    }
-                    else
-                    {
-                        l_innerNode.FontWeight = FontWeights.Normal;
-                    }
-                    ProcessNodes(l_innerNode, builder, level);
-                }
-               
-            }
-        }
-        #endregion
         public void RefreshSolutionList(int MainFileLevel = 0)
         {
             ListDirectory(SolutionTreeView, ProjectDirectory);
-            IterateThroughSolutionView(MainFileLevel);
            // var header  = (string)((TreeViewItem)SolutionTreeView.SelectedItem).Header;
             foreach (TreeViewItem item in SolutionTreeView.Items)
             {
@@ -659,6 +622,10 @@ namespace RPA_Workbench.ViewModels
             }
 
         }
+        #endregion
+
+        #region Functions
+
         private class Reference
         {
             string _name;
@@ -730,7 +697,9 @@ namespace RPA_Workbench.ViewModels
             }
 
 
-
+            JsonControls jsonControls = new JsonControls();
+            jsonControls.ReadJsonFile(ProjectRootFolder + "\\Project.json");
+            jsonControls.DeserializeJsonObject();
 
             foreach (var file in directoryInfo.GetFiles())
             {
@@ -738,7 +707,28 @@ namespace RPA_Workbench.ViewModels
                 {
                     continue;
                 }
-                directoryNode.Items.Add(new TreeViewItem { Header = file.Name });
+             
+
+                //Process to Bolden MAIN File
+                string _cleanedFileName = file.FullName;
+                string MainFile;
+
+                if (jsonControls.GetKeyValue("Main").Contains("\\") == false) //If in root of Solution
+                {
+                    MainFile = jsonControls.GetKeyValue("ProjectPath") + "\\" + jsonControls.GetKeyValue("Main");
+                }
+                else // If in other folder in solution
+                {
+                    MainFile = jsonControls.GetKeyValue("ProjectPath") + jsonControls.GetKeyValue("Main");
+                }
+                if (_cleanedFileName == MainFile)
+                {
+                    directoryNode.Items.Add(new TreeViewItem { Header = file.Name, FontWeight = FontWeights.Bold });
+                }
+                else
+                {
+                    directoryNode.Items.Add(new TreeViewItem { Header = file.Name, FontWeight = FontWeights.Normal });
+                }
             }
 
 
@@ -748,6 +738,8 @@ namespace RPA_Workbench.ViewModels
             return directoryNode;
 
         }
+
+        #endregion
 
         #region Drag/Drop Events
         //EVENTS
@@ -807,7 +799,7 @@ namespace RPA_Workbench.ViewModels
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     Point currentPosition = e.GetPosition(SolutionTreeView);
-
+                   
                     if ((Math.Abs(currentPosition.X - _lastMouseDown.X) > 10.0) ||
                         (Math.Abs(currentPosition.Y - _lastMouseDown.Y) > 10.0))
                     {
@@ -867,7 +859,7 @@ namespace RPA_Workbench.ViewModels
                         _sourceItem.Header.ToString().Contains("Dependencies") == false)
                     {
                         _isEqual = true;
-                        RefreshSolutionList();
+                        //RefreshSolutionList();
                         //	ListDirectory(SolutionTreeViewBox, ProjectDirectory);
                     }
                 }
@@ -943,18 +935,21 @@ namespace RPA_Workbench.ViewModels
             }
             else //If Not Moving to Root Directory/Parent
             {
-                string FileToMove = ProjectDirectory + "\\" + _sourceItem.Header;
-                string FileDestination = ProjectDirectory + "\\" + _targetItem.Header + "\\" + _sourceItem.Header;
+                string FileToMove = ProjectDirectory + SelectedImagePath;
+                SelectedImagePath = SelectedImagePath.TrimEnd(SelectedFileName.ToCharArray());
+                string FileDestination = ProjectDirectory +  SelectedImagePath + _targetItem.Header;
                 foreach (TreeViewItem item in _sourceItem.Items)
                 {
                     addChild(item, item1);
 
                 }
+                MessageBox.Show(FileToMove);
+                MessageBox.Show(FileDestination);
                 File.Move(FileToMove, FileDestination);
             }
 
             //ListDirectory();
-            RefreshSolutionList();
+           // RefreshSolutionList();
             //MessageBox.Show("Moving File: " + FileToMove + Environment.NewLine +
             //				"To" + Environment.NewLine +
             //				"File Destination" + FileDestination);
@@ -1079,7 +1074,10 @@ namespace RPA_Workbench.ViewModels
                                 e.Effects = DragDropEffects.Move;
                                 e.Handled = true;
                             }
-
+                             foreach (TreeViewItem item in SolutionTreeView.Items)
+                             {
+                                item.IsExpanded = true;
+                             }
                             switch (e.Effects)
                             {
                                 case DragDropEffects.Move:
