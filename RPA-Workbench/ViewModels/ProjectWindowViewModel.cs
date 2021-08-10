@@ -250,8 +250,8 @@ namespace RPA_Workbench.ViewModels
             Views.ProjectSolutionControls.RenameDialog renameDialog = new Views.ProjectSolutionControls.RenameDialog();
             ViewModels.ProjectSolutionControls.RenameDialogViewModel renameDialogViewModel = new ProjectSolutionControls.RenameDialogViewModel(renameDialog);
             renameDialog.DataContext = renameDialogViewModel;
-            renameDialogViewModel.ParentFolder = ProjectRootFolder;
-            renameDialogViewModel.OldFileName = SelectedFileName;
+            renameDialogViewModel.ProjectRootFolder = ProjectRootFolder;
+            renameDialogViewModel.OldFileName = SelectedImagePath;
             mainWindowLocal.MainRibbon.ApplicationMenu.IsEnabled = false;
             mainWindowLocal.Opacity = 0.2f;
 
