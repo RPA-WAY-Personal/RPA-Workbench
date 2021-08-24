@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="SplashScreen" Height="338.438" Width="625.625" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Window.Background>
-        <ImageBrush ImageSource="/RPA-Workbench-Revision2;component/1. Resources/RPA-WAY Images/RPA Workbench Splash Centered.png"/>
+        <ImageBrush ImageSource="/RPA-Workbench;component/1. Resources/RPA-WAY Images/RPA Workbench Splash Centered.png"/>
     </Window.Background>
     <Grid>
 

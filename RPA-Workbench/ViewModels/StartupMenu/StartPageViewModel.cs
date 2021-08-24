@@ -488,7 +488,7 @@ namespace RPA_Workbench.ViewModels.StartupMenu
                 new JProperty("Name", ProjectName),
                 new JProperty("ProjectPath", projectDirectory),
                 new JProperty("Description", ProjectDescription),
-                new JProperty("Main", "Main")
+                new JProperty("Main", "Main.xaml")
            //new JProperty("ExpressionLanguage", cmbProjectExpression.SelectionBoxItem.ToString())
            );
             File.WriteAllText(projectDirectory + "\\Project.json", ProjectJson.ToString());
@@ -799,8 +799,8 @@ namespace RPA_Workbench.ViewModels.StartupMenu
             }
             */
 
-            docRef.ImageSourceSmall = new BitmapImage(new Uri("/RPA-Workbench-Revision2;component/1. Resources/StartPage Images/Project Icon Dark.png", UriKind.Relative));
-            docRef.ImageSourceLarge = new BitmapImage(new Uri("/RPA-Workbench-Revision2;component/1. Resources/StartPage Images/Project Icon Dark.png", UriKind.Relative));
+            docRef.ImageSourceSmall = new BitmapImage(new Uri("/RPA-Workbench;component/1. Resources/StartPage Images/Project Icon Dark.png", UriKind.Relative));
+            docRef.ImageSourceLarge = new BitmapImage(new Uri("/RPA-Workbench;component/1. Resources/StartPage Images/Project Icon Dark.png", UriKind.Relative));
             
             manager.Documents.Add(docRef);
             Properties.Settings.Default.RecentDocuments = manager.Serialize();

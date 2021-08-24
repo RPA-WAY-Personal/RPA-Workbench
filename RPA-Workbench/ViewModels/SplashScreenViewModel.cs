@@ -42,10 +42,10 @@ namespace RPA_Workbench.ViewModels
 
         private void StartupCheck()
         {
-            if (Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RPA Workbench")) == false)
+            if (Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RPA-Workbench")) == false)
             {
 
-                Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RPA Workbench"));
+                Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "RPA-Workbench"));
 
             }
         }

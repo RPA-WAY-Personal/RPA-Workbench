@@ -28,7 +28,7 @@ namespace RPA_Workbench.Utilities.TreeNodeClasses
 
             if ((value as string).Contains(@".xaml"))
             {
-                Uri uri = new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/Xaml File - 32.png");
+                Uri uri = new Uri("pack://application:,,,/RPA-Workbench;component//1. Resources/ProjectWindow Images/Xaml File - 32.png");
                  source = new BitmapImage(uri);
                 source.UriSource = uri;
                 source.DecodePixelHeight = 10;
@@ -39,13 +39,13 @@ namespace RPA_Workbench.Utilities.TreeNodeClasses
             if ((value as string).Contains(@"Dependencies"))
             {
                 // Uri uri = new Uri("pack://application:,,,/RPA Workbench;component//Resources/FolderIcon_ExcelGreen.png");
-                source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/DepTree-32.png"));
+                source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench;component//1. Resources/ProjectWindow Images/DepTree-32.png"));
                 return source;
             }
             if ((value as string).Contains(@".dll"))
             {
                 // Uri uri = new Uri("pack://application:,,,/RPA Workbench;component//Resources/FolderIcon_ExcelGreen.png");
-                source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/DepTreeItem-32.png"));
+                source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench;component//1. Resources/ProjectWindow Images/DepTreeItem-32.png"));
                 return source;
             }
 
@@ -57,7 +57,7 @@ namespace RPA_Workbench.Utilities.TreeNodeClasses
 
                 //Uri uri = new Uri("pack://application:,,,/RPA Workbench;component//Resources/FolderIcon_ExcelGreen.png");
                 //BitmapImage source = new BitmapImage(uri);
-                source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/ProjectRoot-32.png"));
+                source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench;component//1. Resources/ProjectWindow Images/ProjectRoot-32.png"));
                 return source;
             }
 
@@ -67,7 +67,7 @@ namespace RPA_Workbench.Utilities.TreeNodeClasses
             if ((value as string).Contains("\\"))
                 {
                     // Uri uri = new Uri("pack://application:,,,/RPA Workbench;component//Resources/FolderIcon_ExcelGreen.png");
-                     source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/Folder Dark -32.png"));
+                     source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench;component//1. Resources/ProjectWindow Images/Folder Dark -32.png"));
                     return source;
                 }
                 else
@@ -78,7 +78,7 @@ namespace RPA_Workbench.Utilities.TreeNodeClasses
 
                     //Uri uri = new Uri("pack://application:,,,/RPA Workbench;component//Resources/FolderIcon_ExcelGreen.png");
                     //BitmapImage source = new BitmapImage(uri);
-                     source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench-Revision2;component//1. Resources/ProjectWindow Images/Folder Dark -32.png"));
+                     source = new BitmapImage(new Uri("pack://application:,,,/RPA-Workbench;component//1. Resources/ProjectWindow Images/Folder Dark -32.png"));
                     return source;
                 }
             

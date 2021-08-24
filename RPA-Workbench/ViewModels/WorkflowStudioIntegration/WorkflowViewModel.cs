@@ -47,7 +47,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             this.validationErrorService = new ValidationErrorService(this.validationErrors);
             this.workflowDesigner.Context.Services.Publish<IValidationErrorService>(this.validationErrorService);
 
-            this.workflowDesigner.ModelChanged += delegate(object sender, EventArgs args)
+            this.workflowDesigner.ModelChanged += delegate (object sender, EventArgs args)
             {
                 this.modelChanged = true;
                 this.OnPropertyChanged("DisplayNameWithModifiedIndicator");
@@ -61,7 +61,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
 
             this.workflowDesigner.Context.Services.GetService<DesignerConfigurationService>().TargetFrameworkName = new System.Runtime.Versioning.FrameworkName(".NETFramework", new Version(4, 5));
             this.workflowDesigner.Context.Services.GetService<DesignerConfigurationService>().LoadingFromUntrustedSourceEnabled = true;
-            this.validationErrorService.ErrorsChangedEvent += delegate(object sender, EventArgs args)
+            this.validationErrorService.ErrorsChangedEvent += delegate (object sender, EventArgs args)
             {
                 DispatcherService.Dispatch(() =>
                 {
@@ -310,13 +310,13 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             {
                 this.outputTextBox.Clear();
                 this.runner.Run();
-            } 
+            }
             catch (Exception e)
             {
                 MessageBox.Show(string.Format(Resources.ErrorRunningDialogMessage, ExceptionHelper.FormatStackTrace(e)), Resources.ErrorRunningDialogTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
         public void DebugWorkflow()
         {
             if (this.GetRootType() == typeof(WorkflowService))

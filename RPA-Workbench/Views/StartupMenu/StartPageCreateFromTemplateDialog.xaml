@@ -41,12 +41,12 @@
         <Label Content="Expression" HorizontalAlignment="Left" Margin="10,237,0,0" VerticalAlignment="Top"/>
         <ribbon:Button x:Name="btnBack" Command="{Binding PreviousPageCommand}" HorizontalAlignment="Left" Margin="10,410,0,0" VerticalAlignment="Top" Height="30" Width="33" ImageSourceSmallSize="32,32">
             <ribbon:Button.ImageSourceSmall>
-                <BitmapImage UriSource="/RPA-Workbench-Revision2;component/1.%20Resources/StartPage%20Images/Back%20Arrow%20Dark.png" UriCachePolicy="{x:Null}"/>
+                <BitmapImage UriSource="/RPA-Workbench;component/1.%20Resources/StartPage%20Images/Back%20Arrow%20Dark.png" UriCachePolicy="{x:Null}"/>
             </ribbon:Button.ImageSourceSmall>
         </ribbon:Button>
         <ribbon:Button x:Name="btnCreateProject" HorizontalAlignment="Left" Margin="294,241,0,0" VerticalAlignment="Top" Height="23" Width="117" ImageSourceSmallSize="20,20" Label="Create Project" StaysOpenOnClick="True" Foreground="Black" BorderBrush="#FFD3D4D7" Focusable="False" Command="{Binding CreateProjectCommand}">
             <ribbon:Button.ImageSourceSmall>
-                <BitmapImage UriSource="/RPA-Workbench-Revision2;component/1.%20Resources/StartPage%20Images/CreateProject%20Dark.png" UriCachePolicy="{x:Null}"/>
+                <BitmapImage UriSource="/RPA-Workbench;component/1.%20Resources/StartPage%20Images/CreateProject%20Dark.png" UriCachePolicy="{x:Null}"/>
             </ribbon:Button.ImageSourceSmall>
         </ribbon:Button>
 

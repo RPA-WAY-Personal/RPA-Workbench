@@ -548,12 +548,12 @@ namespace RPA_Workbench.ViewModels
 
             ActiproSoftware.Windows.Controls.Ribbon.Controls.Button deleteButton = new Button();
             deleteButton.Label = "Delete";
-            deleteButton.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/DeleteIcon.png", UriKind.RelativeOrAbsolute));
+            deleteButton.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench;component/1. Resources/ProjectWindow Images/DeleteIcon.png", UriKind.RelativeOrAbsolute));
             deleteButton.Command = DeleteFileorFolderCommand;
 
             ActiproSoftware.Windows.Controls.Ribbon.Controls.Button createFolderButton = new Button();
             createFolderButton.Label = "Create Folder";
-            createFolderButton.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/Folder Dark -32.png", UriKind.RelativeOrAbsolute));
+            createFolderButton.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench;component/1. Resources/ProjectWindow Images/Folder Dark -32.png", UriKind.RelativeOrAbsolute));
     
 
             ActiproSoftware.Windows.Controls.Ribbon.Controls.Button renameButton = new Button();
@@ -575,12 +575,12 @@ namespace RPA_Workbench.ViewModels
             DependencycontextMenu = new ActiproSoftware.Windows.Controls.Ribbon.Controls.ContextMenu();
 
             ActiproSoftware.Windows.Controls.Ribbon.Controls.Button addDependancy = new Button();
-            addDependancy.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/Add-Package - 32.png", UriKind.RelativeOrAbsolute));
+            addDependancy.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench;component/1. Resources/ProjectWindow Images/Add-Package - 32.png", UriKind.RelativeOrAbsolute));
             addDependancy.Label = "Add Dependency";
             addDependancy.Command = AddDepedencyCommand;
 
             ActiproSoftware.Windows.Controls.Ribbon.Controls.Button deleteDependancy = new Button();
-            deleteDependancy.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench-Revision2;component/1. Resources/ProjectWindow Images/Remove-Package - 32.png", UriKind.RelativeOrAbsolute));
+            deleteDependancy.ImageSourceSmall = new BitmapImage(new Uri(@"/RPA-Workbench;component/1. Resources/ProjectWindow Images/Remove-Package - 32.png", UriKind.RelativeOrAbsolute));
             deleteDependancy.Label = "Remove Dependency";
             deleteDependancy.Command = RemoveDepedencyCommand;
 

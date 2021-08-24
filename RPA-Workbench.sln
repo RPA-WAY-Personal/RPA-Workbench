@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controls.Extensions", "Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPA-Workbench", "RPA-Workbench\RPA-Workbench.csproj", "{71CAEAFC-259D-497E-A299-686562B3B78A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPA.Workbench.AutomationEngine", "RPA.Workbench.AutomationEngine\RPA.Workbench.AutomationEngine.csproj", "{834BB495-6824-4CA2-92E2-CEB1967FAC2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{71CAEAFC-259D-497E-A299-686562B3B78A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71CAEAFC-259D-497E-A299-686562B3B78A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71CAEAFC-259D-497E-A299-686562B3B78A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{834BB495-6824-4CA2-92E2-CEB1967FAC2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{834BB495-6824-4CA2-92E2-CEB1967FAC2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{834BB495-6824-4CA2-92E2-CEB1967FAC2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{834BB495-6824-4CA2-92E2-CEB1967FAC2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

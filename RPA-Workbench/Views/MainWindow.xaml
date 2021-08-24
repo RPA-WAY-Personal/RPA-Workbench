@@ -117,31 +117,31 @@
                     <ribbon:Group Label="Execute" Width="88">
                         <ribbon:SplitButton Command="{Binding Path=SaveWorkflowCommand}" x:Name="btnRibbonSaveButtonParent" Label="Save">
                             <ribbon:SplitButton.ImageSourceLarge>
-                                <BitmapImage UriSource="/RPA-Workbench-Revision2;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Save.png" UriCachePolicy="{x:Null}"/>
+                                <BitmapImage UriSource="/RPA-Workbench;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Save.png" UriCachePolicy="{x:Null}"/>
                             </ribbon:SplitButton.ImageSourceLarge>
                             <ribbon:Menu>
                                 <ribbon:Button x:Name="SaveAll" Label="Save All" Command="{Binding Path=SaveAllWorkflowsCommand}">
                                     <ribbon:Button.ImageSourceLarge>
-                                        <BitmapImage UriSource="/RPA-Workbench-Revision2;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/SaveAll.png" UriCachePolicy="{x:Null}"/>
+                                        <BitmapImage UriSource="/RPA-Workbench;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/SaveAll.png" UriCachePolicy="{x:Null}"/>
                                     </ribbon:Button.ImageSourceLarge>
                                 </ribbon:Button>
                             </ribbon:Menu>
                         </ribbon:SplitButton>
 
-                        <ribbon:SplitButton Command="{Binding Path=RunProjectFromJsonCommand}"  x:Name="btnRibbonRunButtonParent" Label="Run" ImageSourceSmall="/RPA-Workbench-Revision2;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Run.png" ImageSourceSmallSize="10,10">
+                        <ribbon:SplitButton Command="{Binding Path=RunProjectFromJsonCommand}"  x:Name="btnRibbonRunButtonParent" Label="Run" ImageSourceSmall="/RPA-Workbench;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Run.png" ImageSourceSmallSize="10,10">
                             <ribbon:Menu>
-                                <ribbon:Button x:Name="btnRibbonDebugButtonChild" Command="{Binding Path=StartWithDebuggingCommand}" Label="Debug" ImageSourceSmall="/RPA-Workbench-Revision2;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Debug.png" ></ribbon:Button>
+                                <ribbon:Button x:Name="btnRibbonDebugButtonChild" Command="{Binding Path=StartWithDebuggingCommand}" Label="Debug" ImageSourceSmall="/RPA-Workbench;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Debug.png" ></ribbon:Button>
                                 <ribbon:Button Label="Run Current Flow" Command="{Binding Path=StartWithoutDebuggingCommand}">
                                     <ribbon:Button.ImageSourceSmall>
-                                        <BitmapImage x:Name="btnCurrentFlow" UriSource="/RPA-Workbench-Revision2;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Run.png" UriCachePolicy="{x:Null}"/>
+                                        <BitmapImage x:Name="btnCurrentFlow" UriSource="/RPA-Workbench;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Run.png" UriCachePolicy="{x:Null}"/>
                                     </ribbon:Button.ImageSourceSmall>
                                 </ribbon:Button>
                             </ribbon:Menu>
                         </ribbon:SplitButton>
 
-                        <ribbon:SplitButton Visibility="Hidden" Command="{Binding Path=AddReferenceCommand}"  x:Name="btnAddReference" Label="Add Package" ImageSourceSmallSize="512,512" ImageSourceSmall="/RPA-Workbench-Revision2;component/1. Resources/MainWindow Images/Top Ribbon Images/AddReference.png">
+                        <ribbon:SplitButton Visibility="Hidden" Command="{Binding Path=AddReferenceCommand}"  x:Name="btnAddReference" Label="Add Package" ImageSourceSmallSize="512,512" ImageSourceSmall="/RPA-Workbench;component/1. Resources/MainWindow Images/Top Ribbon Images/AddReference.png">
                             <ribbon:Menu>
-                                <ribbon:Button x:Name="btnDeletePackage" Command="{Binding Path=RemoveReferenceCommand}" Label="Remove" ImageSourceSmall="/RPA-Workbench-Revision2;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Debug.png" ></ribbon:Button>
+                                <ribbon:Button x:Name="btnDeletePackage" Command="{Binding Path=RemoveReferenceCommand}" Label="Remove" ImageSourceSmall="/RPA-Workbench;component/1.%20Resources/MainWindow%20Images/Top%20Ribbon%20Images/Debug.png" ></ribbon:Button>
                             </ribbon:Menu>
                         </ribbon:SplitButton>
 
