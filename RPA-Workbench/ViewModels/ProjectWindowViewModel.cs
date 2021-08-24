@@ -24,6 +24,7 @@ using ActiproSoftware.Windows.Controls.Ribbon.Controls;
 using ActiproSoftware.Windows.Controls.Ribbon;
 using Button = ActiproSoftware.Windows.Controls.Ribbon.Controls.Button;
 using Newtonsoft.Json;
+using Meziantou.Framework;
 
 namespace RPA_Workbench.ViewModels
 {
@@ -423,7 +424,7 @@ namespace RPA_Workbench.ViewModels
             }
 
             #region Debugging
-            //MessageBox.Show("SelectedImagePath : " + SelectedImagePath);
+        
             //MessageBox.Show(temp.ToString());
             //MessageBox.Show(ProjectRootFolder + "\\" + fileName);
             //MessageBox.Show(jsonControls.GetKeyValue("Name"));
@@ -441,9 +442,9 @@ namespace RPA_Workbench.ViewModels
             if (SelectedImagePath.Contains(jsonControls.GetKeyValue("Name")))
             {
                 SelectedImagePath = SelectedImagePath.Replace(jsonControls.GetKeyValue("Name"), "");
-                SelectedFilePath = ProjectRootFolder + "\\" + SelectedImagePath;
+                SelectedFilePath = ProjectRootFolder + SelectedImagePath;
             }
-          
+           // MessageBox.Show("SelectedImagePath : " + SelectedFilePath);
             //  MessageBox.Show("Ruwe: " + ProjectDirectory + SelectedImagePath) ;
         }
 
@@ -923,33 +924,99 @@ namespace RPA_Workbench.ViewModels
                 }
                 string FileToMove = System.IO.Path.GetFullPath(_sourceItem.Header.ToString());
                 string FileDestination = ProjectDirectory + "\\" + _sourceItem.Header.ToString();
-                //MessageBox.Show("Moving File: " + SelectedFilePath + Environment.NewLine +
-                //				"To" + Environment.NewLine +
-                //				"File Destination" + FileDestination);
+                MessageBox.Show("Moving File: " + SelectedFilePath + Environment.NewLine +
+                                "To" + Environment.NewLine +
+                                "File Destination" + FileDestination);
                 foreach (TreeViewItem item in _sourceItem.Items)
                 {
                     addChild(item, item1);
                 }
-                File.Move(SelectedFilePath, FileDestination);
+
+                FileAttributes attr = File.GetAttributes(SelectedFilePath);
+
+                //detect whether its a directory or file
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)  // Move Directory
+                {
+                    Directory.Move(SelectedFilePath, FileDestination);
+                }
+                else
+                {
+                    File.Move(SelectedFilePath, FileDestination); // Move File
+                }
+                    
 
             }
             else //If Not Moving to Root Directory/Parent
             {
+                MessageBox.Show(SelectedFilePath);
+                
                 string FileToMove = ProjectDirectory + SelectedImagePath;
-                SelectedImagePath = SelectedImagePath.TrimEnd(SelectedFileName.ToCharArray());
-                string FileDestination = ProjectDirectory +  SelectedImagePath + _targetItem.Header;
-                foreach (TreeViewItem item in _sourceItem.Items)
-                {
-                    addChild(item, item1);
+                // SelectedImagePath = SelectedImagePath.TrimEnd(SelectedFileName.ToCharArray());
+                int index = SelectedFilePath.LastIndexOf(SelectedFileName); // Character to remove "?"
+                
+                string FileDestination = SelectedFilePath +  _target.Header + "\\" + SelectedFileName;
+                //string FileDestination = ProjectDirectory + SelectedImagePath;
+                
+                //MessageBox.Show("File To Move: " + FileToMove);
+                //MessageBox.Show("File Move To: " + FileDestination);
 
+                //MessageBox.Show("Moving File: " + FileToMove + Environment.NewLine +
+                //              "To" + Environment.NewLine +
+                //              "File Destination: " + FileDestination);
+
+
+                FileAttributes attr = File.GetAttributes(SelectedFilePath); //CHECK if Dir or File
+
+                if (index > 0)
+                {
+                    SelectedFilePath = SelectedFilePath.Replace(SelectedFileName, ""); // This will remove all text after character ?                                                        // MessageBox.Show("New FilePath without SelectedFileName: " + SelectedFilePath);
                 }
-                MessageBox.Show(FileToMove);
-                MessageBox.Show(FileDestination);
-                File.Move(FileToMove, FileDestination);
+                FileDestination = SelectedFilePath + _target.Header + "\\" + SelectedFileName; //Remove Selected File name again after checking if it is a file or directory
+
+                MessageBox.Show("FileDestination Should be: " + FileDestination);
+
+                if ((attr & FileAttributes.Directory) == FileAttributes.Directory)  // Move Directory
+                {
+                    //string input = "text?here";
+                    //int index = SelectedFilePath.LastIndexOf(SelectedFileName); // Character to remove "?"
+
+                    MessageBox.Show("FOLDER " + Environment.NewLine +
+                       "Moving File: " + FileToMove + Environment.NewLine +
+                         "To" + Environment.NewLine +
+                         "File Destination: " + FileDestination);
+
+
+                    //if (index > 0)
+                    //{
+                    //    SelectedFilePath = SelectedFilePath.Substring(0, index); // This will remove all text after character ?
+                    //    MessageBox.Show("New FilePath without SelectedFileName: " + SelectedFilePath);
+                    //}
+                       
+
+                    //SelectedFilePath = SelectedFilePath.Remove()
+                    FileDestination = SelectedFilePath + _target.Header;
+                    MessageBox.Show("Moving File: " + FileToMove + Environment.NewLine +
+                            "To" + Environment.NewLine +
+                            "File Destination: " + FileDestination);
+                    Directory.Move(FileToMove, FileDestination);
+                }
+                else
+                {
+                    MessageBox.Show("FILE " + Environment.NewLine +
+                        "Moving File: " + FileToMove + Environment.NewLine +
+                          "To" + Environment.NewLine +
+                          "File Destination: " + FileDestination);
+                    File.Move(FileToMove, FileDestination); // Move File
+                }
+               // File.Move(FileToMove, FileDestination);
+            }
+            foreach (TreeViewItem item in _sourceItem.Items)
+            {
+                addChild(item, item1);
             }
 
             //ListDirectory();
-           // RefreshSolutionList();
+            // RefreshSolutionList();
             //MessageBox.Show("Moving File: " + FileToMove + Environment.NewLine +
             //				"To" + Environment.NewLine +
             //				"File Destination" + FileDestination);
