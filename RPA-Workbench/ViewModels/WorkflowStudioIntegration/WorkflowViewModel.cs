@@ -22,7 +22,11 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
     using RPA_Workbench.Properties;
     using RPA_Workbench.Utilities;
     using RPA_Workbench.Views;
+    using RPA.Workbench.AutomationEngine;
     using Microsoft.Win32;
+    using System.Diagnostics;
+    using System.Threading;
+    using System.Windows.Threading;
 
     public class WorkflowViewModel : ViewModelBase
     {
@@ -34,7 +38,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         private bool modelChanged;
         private TextWriter output;
         private TextBox outputTextBox;
-        private IWorkflowRunner runner;
+        private RPA.Workbench.AutomationEngine.Execution.IWorkflowRunner runner;
         private int id;
         private string fullFilePath;
         private bool disableDebugViewOutput;
@@ -297,19 +301,59 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
 
         public void RunWorkflow()
         {
+           // System.Diagnostics.Process process = new System.Diagnostics.Process();
             if (this.GetRootType() == typeof(WorkflowService))
             {
-                this.runner = new WorkflowServiceHostRunner(this.output, this.DisplayName, this.workflowDesigner);
+                //this.runner = new WorkflowServiceHostRunner(this.output, this.DisplayName, this.workflowDesigner);
             }
             else
             {
-                this.runner = new WorkflowRunner(this.output, this.DisplayName, this.workflowDesigner);
+                
+               // process.StartInfo.FileName = "AutomationEngine.exe";
+               // process.StartInfo.Arguments = "Run " + "\"" + fullFilePath + "\"";
+               
+                //this.runner = new WorkflowRunner(this.output, this.DisplayName, this.workflowDesigner);
             }
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "AutomationEngine.exe",
+                CreateNoWindow = true,
+                UseShellExecute = false, // Required to use RedirectStandardOutput
+                RedirectStandardOutput = true, //Required to be able to read StandardOutput
+                Arguments = "Run " + "\"" + fullFilePath + "\"" // Skip this if you don't use Arguments
+            };
 
+            using (var process = new Process { StartInfo = startInfo })
+            {
+               
+                process.Start();
+                this.outputTextBox.Clear();
+                process.OutputDataReceived += (sender, line) =>
+                {
+  
+                    if (line.Data != null)
+                    {
+                        Console.WriteLine(line.Data);
+                    }
+                      
+                   
+                };
+
+                process.BeginOutputReadLine();
+
+                //process.WaitForExit();
+            }
             try
             {
-                this.outputTextBox.Clear();
-                this.runner.Run();
+                //this.outputTextBox.Clear();
+                //process.StartInfo.UseShellExecute = false;
+           
+                //process.StartInfo.RedirectStandardOutput = true;
+
+                //process.Start();
+                //process.BeginOutputReadLine();
+                //this.outputTextBox.Text += process.StandardOutput.ReadToEnd();
+               // this.runner.Run();
             }
             catch (Exception e)
             {
@@ -321,11 +365,11 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         {
             if (this.GetRootType() == typeof(WorkflowService))
             {
-                this.runner = new WorkflowServiceHostDebugger(this.output, this.DisplayName, this.workflowDesigner, this.disableDebugViewOutput);
+               // this.runner = new WorkflowServiceHostDebugger(this.output, this.DisplayName, this.workflowDesigner, this.disableDebugViewOutput);
             }
             else
             {
-                this.runner = new WorkflowDebugger(this.output, this.DisplayName, this.workflowDesigner, this.disableDebugViewOutput);
+               // this.runner = new WorkflowDebugger(this.output, this.DisplayName, this.workflowDesigner, this.disableDebugViewOutput);
             }
 
             try

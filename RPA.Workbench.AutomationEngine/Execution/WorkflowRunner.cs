@@ -13,6 +13,7 @@ namespace RPA.Workbench.AutomationEngine.Execution
     using System.Activities.XamlIntegration;
     using System.IO;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Windows;
     using RPA.Workbench.AutomationEngine.Properties;
     using RPA.Workbench.AutomationEngine.Utilities;
@@ -62,21 +63,47 @@ namespace RPA.Workbench.AutomationEngine.Execution
          
             try
             {
-                string xaml = File.ReadAllText(@"C:\Users\ruwek\Documents\RPA-Workbench\Blank Processesdrfsfsfsf\Main.xaml");
-                workflowDesigner = new WorkflowDesigner();
-                this.workflowDesigner.Load(@"C:\Users\ruwek\Documents\RPA-Workbench\Blank Processesdrfsfsfsf\Main.xaml");
-                this.workflowDesigner.Flush();
-                MemoryStream ms = new MemoryStream(ASCIIEncoding.Default.GetBytes(this.workflowDesigner.Text));
+                //string xaml = File.ReadAllText(@"C:\Users\ruwek\Documents\RPA-Workbench\Blank Processesdrfsfsfsf\Main.xaml");
+                //workflowDesigner = new WorkflowDesigner();
+                //this.workflowDesigner.Load(@"C:\Users\ruwek\Documents\RPA-Workbench\Blank Processesdrfsfsfsf\Main.xaml");
+                //this.workflowDesigner.Flush();
+
+                //MemoryStream ms = new MemoryStream(ASCIIEncoding.Default.GetBytes(xaml));
                 //Console.WriteLine(xaml);
-                DynamicActivity activityToRun = ActivityXamlServices.Load(ms) as DynamicActivity;
+                //Activity activityToRun = ActivityXamlServices.Load(@"C:\Users\ruwek\Documents\RPA-Workbench\Blank Processesdrfsfsfsf\Main.xaml") as Activity;
+                //Console.WriteLine(activityToRun.DisplayName);
+                //this.workflowApplication = new WorkflowApplication(activityToRun);
 
-                this.workflowApplication = new WorkflowApplication(activityToRun);
+                //this.workflowApplication.Extensions.Add(this.output);
+                //this.workflowApplication.Completed = this.WorkflowCompleted;
+                //this.workflowApplication.Aborted = this.WorkflowAborted;
+                //this.workflowApplication.OnUnhandledException = this.WorkflowUnhandledException;
 
-                this.workflowApplication.Extensions.Add(this.output);
+                // StatusViewModel.SetStatusText(Resources.RunningStatus, this.workflowName);
+                string filePath = WorkFlowFile;
+                string tempString = "";
+                StringBuilder xamlWFString = new StringBuilder();
+                StreamReader xamlStreamReader =
+                    new StreamReader(filePath);
+                while (tempString != null)
+                {
+                    tempString = xamlStreamReader.ReadLine();
+                    if (tempString != null)
+                    {
+                        xamlWFString.Append(tempString);
+                    }
+                }
+                Activity wfInstance = ActivityXamlServices.Load(
+                    new StringReader(xamlWFString.ToString()));
+
+                this.workflowApplication = new WorkflowApplication(wfInstance);
+
+                //this.workflowApplication.Extensions.Add(this.output);
                 this.workflowApplication.Completed = this.WorkflowCompleted;
                 this.workflowApplication.Aborted = this.WorkflowAborted;
                 this.workflowApplication.OnUnhandledException = this.WorkflowUnhandledException;
-                // StatusViewModel.SetStatusText(Resources.RunningStatus, this.workflowName);
+                //WorkflowInvoker.Invoke(wfInstance);
+
 
                 try
                 {
@@ -125,12 +152,14 @@ namespace RPA.Workbench.AutomationEngine.Execution
         private void WorkflowCompleted(WorkflowApplicationCompletedEventArgs e)
         {
             this.running = false;
+            Console.WriteLine("Workflow Complete");
             //StatusViewModel.SetStatusText(string.Format(Resources.CompletedStatus, e.CompletionState.ToString()), this.workflowName);
         }
 
         private void WorkflowAborted(WorkflowApplicationAbortedEventArgs e)
         {
             this.running = false;
+            Console.WriteLine("Workflow Aborted");
             //StatusViewModel.SetStatusText(Resources.AbortedStatus, this.workflowName);
         }
 
