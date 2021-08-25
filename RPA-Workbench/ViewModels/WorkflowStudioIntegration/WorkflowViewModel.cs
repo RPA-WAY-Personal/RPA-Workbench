@@ -342,6 +342,11 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 process.BeginOutputReadLine();
 
                 //process.WaitForExit();
+                if (this.outputTextBox.Text.Contains("Workflow Complete"))
+                {
+                    process.Kill();
+                }
+                
             }
             try
             {

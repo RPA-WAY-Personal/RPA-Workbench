@@ -11,6 +11,7 @@ namespace RPA.Workbench.AutomationEngine.Execution
     using System.Activities;
     using System.Activities.Presentation;
     using System.Activities.XamlIntegration;
+    using System.Diagnostics;
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
@@ -148,18 +149,32 @@ namespace RPA.Workbench.AutomationEngine.Execution
            //     this.running = false;
            // }
         }
-
+        bool Completed = false;
         private void WorkflowCompleted(WorkflowApplicationCompletedEventArgs e)
         {
             this.running = false;
+            Completed = true;
             Console.WriteLine("Workflow Complete");
+           
+            foreach (var process in Process.GetProcessesByName("AutomationEngine"))
+            {
+                process.Kill();
+            }
             //StatusViewModel.SetStatusText(string.Format(Resources.CompletedStatus, e.CompletionState.ToString()), this.workflowName);
         }
 
         private void WorkflowAborted(WorkflowApplicationAbortedEventArgs e)
         {
-            this.running = false;
-            Console.WriteLine("Workflow Aborted");
+            if (Completed == false)
+            {
+                this.running = false;
+                Console.WriteLine("Workflow Aborted");
+                foreach (var process in Process.GetProcessesByName("AutomationEngine"))
+                {
+                    process.Kill();
+                }
+            }
+            
             //StatusViewModel.SetStatusText(Resources.AbortedStatus, this.workflowName);
         }
 
