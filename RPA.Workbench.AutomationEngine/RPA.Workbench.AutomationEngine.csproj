@@ -50,7 +50,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icons8-engine-50.ico</ApplicationIcon>
+    <ApplicationIcon>icons8-engine-32.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -145,6 +145,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icons8-engine-32.ico" />
     <Content Include="icons8-engine-50.ico" />
   </ItemGroup>
   <ItemGroup>
