@@ -582,6 +582,21 @@ namespace RPA_Workbench.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;ResourceDictionary
+        ///    xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot; 
+        ///    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot; 
+        ///    xmlns:swd=&quot;clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation&quot; x:Uid=&quot;ResourceDictionary_1&quot;&gt;
+        ///
+        ///    &lt;SolidColorBrush x:Key=&quot;{x:Static swd:WorkflowDesignerColors.WorkflowViewElementBorderColorKey}&quot; x:Uid=&quot;SolidColorBrush_1&quot; Color=&quot;#D6D6D6&quot; /&gt;
+        ///    &lt;SolidColorBrush x:Key=&quot;{x:Static swd:WorkflowDesignerColors.WorkflowView [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string LightTheme {
+            get {
+                return ResourceManager.GetString("LightTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Workflow Studio.
         /// </summary>
         internal static string MainWindowTitle {

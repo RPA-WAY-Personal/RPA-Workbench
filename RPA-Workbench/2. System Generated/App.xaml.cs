@@ -26,11 +26,14 @@ namespace RPA_Workbench
                 {
                     ColorPaletteKind = ColorPaletteKind.Office,
                     ArrowKind = ArrowKind.FilledTriangle,
-                    DockGuideColorFamilyName = ColorFamilyName.Blue,
+                    DockGuideColorFamilyName = ColorFamilyName.Green,
                     PreviewTabColorFamilyName = ColorFamilyName.Gray,
                     PrimaryAccentColorFamilyName = ColorFamilyName.Green,
                     StatusBarBackgroundKind = StatusBarBackgroundKind.Accent,
                     WindowColorFamilyName = ColorFamilyName.Green,
+                    Intent = ThemeIntent.White,
+                    WindowTitleBarBackgroundKind = WindowTitleBarBackgroundKind.Window,
+                    
                 });
 
                 // Use the Actipro styles for native WPF controls that look great with Actipro's control products

@@ -8,7 +8,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RPA_Workbench.Converters" 
+             xmlns:local="clr-namespace:RPA_Workbench.Converters"
+             xmlns:datagrid="http://schemas.actiprosoftware.com/winfx/xaml/datagrid"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
@@ -16,12 +17,27 @@
             <local:BooleanToErrorTypeConverter x:Key="BooleanToErrorTypeConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-
-    <DataGrid Name="ErrorsDataGrid" RowHeaderWidth="0" AutoGenerateColumns="False" BorderThickness="0,1,1,1" EnableRowVirtualization="False" SelectionMode="Single">
+    <Grid>
+        
+    <!--<DataGrid Name="ErrorsDataGrid" RowHeaderWidth="0" AutoGenerateColumns="False" BorderThickness="0,1,1,1" EnableRowVirtualization="False" SelectionMode="Single">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
             <DataGridTextColumn Header="Type" Binding="{Binding IsWarning, Converter={StaticResource BooleanToErrorTypeConverter}}" IsReadOnly="True" />
             <DataGridTextColumn Header="Message" Binding="{Binding Message}" IsReadOnly="True" Width="*"/>
         </DataGrid.Columns>
-    </DataGrid>
+    </DataGrid>-->
+
+        <datagrid:ThemedDataGrid x:Name="ErrorsDataGrid"  SelectionUnit="FullRow" SelectionMode="Single" EnableRowVirtualization="False" FrozenColumnCount="1" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False" CanUserSortColumns="False" HeadersVisibility="Column">
+            <datagrid:ThemedDataGrid.Columns>
+                <!--<DataGridTemplateColumn CanUserReorder="False" CanUserResize="False" CanUserSort="False" Width="Auto"
+							IsReadOnly="True">
+                </DataGridTemplateColumn>-->
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding IsWarning, Converter={StaticResource BooleanToErrorTypeConverter}}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Message" Binding="{Binding Message}" IsReadOnly="True" Width="*"/>
+            </datagrid:ThemedDataGrid.Columns>
+        </datagrid:ThemedDataGrid>
+    </Grid>
+    
+    
 </UserControl>

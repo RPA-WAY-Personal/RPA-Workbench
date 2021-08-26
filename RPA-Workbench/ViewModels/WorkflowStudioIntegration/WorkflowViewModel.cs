@@ -27,6 +27,9 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
     using System.Diagnostics;
     using System.Threading;
     using System.Windows.Threading;
+    using System.Xml;
+    using System.Collections;
+    using System.Xaml;
 
     public class WorkflowViewModel : ViewModelBase
     {
@@ -46,6 +49,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         public WorkflowViewModel(bool disableDebugViewOutput)
         {
             this.workflowDesigner = new WorkflowDesigner();
+            LoadTheme(workflowDesigner);
             this.id = ++designerCount;
             this.validationErrors = new List<ValidationErrorInfo>();
             this.validationErrorService = new ValidationErrorService(this.validationErrors);
@@ -399,6 +403,50 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             this.OnPropertyChanged("DisplayNameWithModifiedIndicator");
 
             StatusViewModel.SetStatusText(Resources.SaveSuccessfulStatus, this.DisplayName);
+        }
+
+        private void LoadTheme(WorkflowDesigner designer)
+        {
+
+            StringReader reader = new StringReader(RPA_Workbench.Properties.Resources.LightTheme);
+
+            XmlReader xmlReader = XmlReader.Create(reader);
+
+            ResourceDictionary fontAndColorDictionary = (ResourceDictionary)System.Windows.Markup.XamlReader.Load(xmlReader);
+
+            Hashtable hashTable = new Hashtable();
+
+            foreach (var key in fontAndColorDictionary.Keys)
+            {
+                hashTable.Add(key, fontAndColorDictionary[key]);
+            }
+
+            designer.PropertyInspectorFontAndColorData = XamlServices.Save(hashTable);
+            HidePropertyWindowToolbar(designer);
+
+        }
+
+        private void HidePropertyWindowToolbar(WorkflowDesigner designer)
+        {
+            try
+            {
+                FrameworkElement fe = (FrameworkElement)designer.PropertyInspectorView;
+                fe = (FrameworkElement)fe.FindName("_propertyToolBar");
+                if (fe.Visibility == null)
+                {
+                    fe.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    fe.Visibility = Visibility.Collapsed;
+                }
+            }
+            catch (Exception)
+            {
+
+
+            }
+
         }
     }
 }

@@ -4,7 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RPA_Workbench"
-        xmlns:ribbon="http://schemas.actiprosoftware.com/winfx/xaml/ribbon" xmlns:shared="http://schemas.actiprosoftware.com/winfx/xaml/shared" xmlns:themes="http://schemas.actiprosoftware.com/winfx/xaml/themes" x:Class="RPA_Workbench.MainWindow"
+        xmlns:ribbon="http://schemas.actiprosoftware.com/winfx/xaml/ribbon"
+        xmlns:shared="http://schemas.actiprosoftware.com/winfx/xaml/shared"
+        xmlns:themes="http://schemas.actiprosoftware.com/winfx/xaml/themes"
+        x:Class="RPA_Workbench.MainWindow"
         mc:Ignorable="d"
         Title="RPA Workbench" ApplicationName="RPA Workbench" DocumentName="RPA-Workbench"  Height="582.649" Width="933.5" WindowStartupLocation="CenterScreen" WindowState="Maximized" Closing="RibbonWindow_Closing">
     <Window.Resources>
@@ -111,7 +114,7 @@
         </Grid.RowDefinitions>
         
         <DockPanel LastChildFill="True" Grid.RowSpan="3" Grid.ColumnSpan="1">
-            <ribbon:Ribbon x:Name="MainRibbon" VerticalAlignment="Top" Width="auto" DockPanel.Dock="Top"  IsQuickAccessToolBarCustomizeButtonVisible="False" ApplicationButtonLabel="Home">
+            <ribbon:Ribbon x:Name="MainRibbon" VerticalAlignment="Top" Width="auto" DockPanel.Dock="Top"  IsQuickAccessToolBarCustomizeButtonVisible="False" ApplicationButtonLabel="Home" QuickAccessToolBarLocation="None">
                 <!--Design Tab-->
                 <ribbon:Tab x:Name="RibbonTabDesign" Label="Design">
                     <ribbon:Group Label="Execute" Width="88">
