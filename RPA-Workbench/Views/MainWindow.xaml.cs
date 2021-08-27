@@ -27,7 +27,11 @@ namespace RPA_Workbench
     {
         public ViewModels.WorkflowStudioIntegration.MainWindowViewModel mainWindowViewModel;
         public Views.BackstageMenu MainBackStageMenu = null;
-        public MainWindow(String CurrentProjectPath = null, Views.BackstageMenu backstageMenuOptionalAssign = null)
+		SolidColorBrush NormalBGColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF217346"));
+		SolidColorBrush NormalFGColor = new SolidColorBrush(Colors.White);
+		SolidColorBrush SelectedBGColor = new SolidColorBrush(Colors.White);
+		SolidColorBrush SelectedFGColor = new SolidColorBrush(Colors.Black);
+		public MainWindow(String CurrentProjectPath = null, Views.BackstageMenu backstageMenuOptionalAssign = null)
         {
 			LoadLayoutSerializer();
 			InitializeComponent();
@@ -42,6 +46,68 @@ namespace RPA_Workbench
 			//ThemeManager.EndUpdate();
 			SerializeSetupOnLoad();
 			SetToolWindowOptions();
+            MainRibbon.SelectedTabChanged += MainRibbon_SelectedTabChanged;
+
+
+			foreach (var item in MainRibbon.Tabs)
+			{
+				if (MainRibbon.SelectedTab.Label == item.Label)
+				{
+					MainRibbon.SelectedTab.Background = SelectedBGColor;
+					MainRibbon.SelectedTab.Foreground = SelectedFGColor;
+					MainRibbon.SelectedTab.BorderBrush = new SolidColorBrush(Colors.White);
+					
+				}
+				else
+				{
+					item.Background = NormalBGColor;
+					item.Foreground = NormalFGColor;
+				}
+			}
+			//}
+			//foreach (var item in MainRibbon.Tabs)
+			//         {
+			//	MessageBox.Show(item.Label);
+			//         }
+		}
+
+
+        private void MainRibbon_SelectedTabChanged(object sender, ActiproSoftware.Windows.Controls.Ribbon.Controls.TabPropertyChangedRoutedEventArgs e)
+        {
+			//SolidColorBrush solidColorBrush = new SolidColorBrush(Colors.Red);
+			//MainRibbon.SelectedTab.Background = solidColorBrush;
+			//MainRibbon.SelectedTab.Foreground = solidColorBrush;
+
+		
+
+            //MessageBox.Show(MainRibbon.SelectedTab.Label);
+            foreach (var item in MainRibbon.Tabs)
+            {
+                if (MainRibbon.SelectedTab.Label == item.Label)
+                {
+					MainRibbon.SelectedTab.Background = SelectedBGColor;
+					MainRibbon.SelectedTab.Foreground = SelectedFGColor;
+					MainRibbon.SelectedTab.BorderBrush = new SolidColorBrush(Colors.White);
+				}
+                else
+                {
+					item.Background = NormalBGColor;
+					item.Foreground = NormalFGColor;
+				}
+            }
+			//if (MainRibbon.SelectedTab.Label == "Design")
+			//{
+				
+			//}
+			//else if (MainRibbon.SelectedTab.Label == "THISTAB")
+   //         {
+			//	MainRibbon.SelectedTab.Background = SelectedBGColor;
+			//	MainRibbon.SelectedTab.Foreground = SelectedFGColor;
+
+			//	MainRibbon.Tabs[0].Background = NormalBGColor;
+			//	SolidColorBrush solidColorBrush2 = new SolidColorBrush(Colors.Black);
+			//	MainRibbon.SelectedTab.Foreground = solidColorBrush2;
+			//}
 		}
 
         public void ReloadMainWindowModel(String CurrentProjectPath, Views.BackstageMenu backstageMenuOptionalAssign = null)
@@ -50,7 +116,7 @@ namespace RPA_Workbench
             DataContext = mainWindowViewModel;
             mainWindowViewModel.AddAllAddReferencesToFileToToolBox(CurrentProjectPath);
 			SetToolWindowOptions();
-
+			MainRibbon.SelectedTabChanged += MainRibbon_SelectedTabChanged;
 		}
 
 		public void SetToolWindowOptions()

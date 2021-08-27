@@ -32,7 +32,7 @@ namespace RPA_Workbench
                     StatusBarBackgroundKind = StatusBarBackgroundKind.Accent,
                     WindowColorFamilyName = ColorFamilyName.Green,
                     Intent = ThemeIntent.White,
-                    WindowTitleBarBackgroundKind = WindowTitleBarBackgroundKind.Window,
+                    WindowTitleBarBackgroundKind = WindowTitleBarBackgroundKind.Accent
                     
                 });
 

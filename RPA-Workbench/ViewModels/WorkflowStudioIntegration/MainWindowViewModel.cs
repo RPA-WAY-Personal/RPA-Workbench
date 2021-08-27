@@ -89,6 +89,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         private ICommand _BackstageTabStart;
         private ICommand _CloseProject;
         private ICommand _RunProjectFromJson;
+        private ICommand _OpenBackstage;
         private TabbedMdiHost tabsPane;
         private IDictionary<ContentTypes, DocumentWindow> dockableContents;
         private ToolboxControl toolboxControl;
@@ -159,6 +160,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             OpenStartPageCommand = new RelayCommand(new Action<object>(OpenStartPage));
             CloseProjectCommand = new RelayCommand(new Action<object>(CloseProject));
             RunProjectFromJsonCommand = new RelayCommand(new Action<object>(StartWithoutDebuggingFromJson));
+            OpenBackstageCommand = new RelayCommand(new Action<object>(StartWithoutDebuggingFromJson));
         }
         private void DockingManager_KeyDown(object sender, KeyEventArgs e)
         {
@@ -290,6 +292,12 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         {
             get { return _RunProjectFromJson; }
             set { _RunProjectFromJson = value; }
+        }
+
+        public ICommand OpenBackstageCommand
+        {
+            get { return _OpenBackstage; }
+            set { _OpenBackstage = value; }
         }
 
         #endregion
@@ -723,7 +731,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         {
             get
             {
-                WorkflowDocumentContent content = this.dockingManager.ActiveWindow as WorkflowDocumentContent;
+                WorkflowDocumentContent content = this.dockingManager.PrimaryDocument as WorkflowDocumentContent;
                 if (content != null)
                 {
                     WorkflowViewModel model = content.DataContext as WorkflowViewModel;
@@ -835,6 +843,11 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
 
                 // model.RunWorkflow();
             }
+        }
+
+        private void OpenBackstage(object parameter)
+        {
+            
         }
         #endregion
 

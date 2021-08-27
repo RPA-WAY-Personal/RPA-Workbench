@@ -114,9 +114,9 @@
         </Grid.RowDefinitions>
         
         <DockPanel LastChildFill="True" Grid.RowSpan="3" Grid.ColumnSpan="1">
-            <ribbon:Ribbon x:Name="MainRibbon" VerticalAlignment="Top" Width="auto" DockPanel.Dock="Top"  IsQuickAccessToolBarCustomizeButtonVisible="False" ApplicationButtonLabel="Home" QuickAccessToolBarLocation="None">
+            <ribbon:Ribbon x:Name="MainRibbon" VerticalAlignment="Top" Width="auto" DockPanel.Dock="Top"  IsQuickAccessToolBarCustomizeButtonVisible="False" ApplicationButtonLabel="Home" QuickAccessToolBarLocation="None" Background="#FF217346" Foreground="White">
                 <!--Design Tab-->
-                <ribbon:Tab x:Name="RibbonTabDesign" Label="Design">
+                <ribbon:Tab x:Name="RibbonTabDesign" Label="Design" Foreground="White" StaysOpenOnClick="True">
                     <ribbon:Group Label="Execute" Width="88">
                         <ribbon:SplitButton Command="{Binding Path=SaveWorkflowCommand}" x:Name="btnRibbonSaveButtonParent" Label="Save">
                             <ribbon:SplitButton.ImageSourceLarge>
@@ -150,6 +150,7 @@
 
                     </ribbon:Group>
                 </ribbon:Tab>
+                <ribbon:Tab x:Name="RibbonTabTEST" Label="THISTAB"/>
 
             </ribbon:Ribbon>
             <!--Docksite-->
