@@ -147,6 +147,13 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             dockingManager.PrimaryDocumentChanged += DockingManager_PrimaryDocumentChanged;
             tabsPane.PrimaryWindowChanged += TabsPane_PrimaryWindowChanged;
 
+            this.ViewOutput();
+            this.ViewErrors();
+            this._OutputToolWindow.Content = OutputView;
+            this._ErrorsToolWindow.Content = ValidationErrorsView;
+            this.ViewOutput();
+            this.ViewErrors();
+            this.UpdateViews();
             RelaySetup();
 
           
@@ -191,7 +198,35 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             get
             {
                 WorkflowViewModel model = this.ActiveWorkflowViewModel;
-                return model == null ? false : model.HasValidationErrors;
+                if (model != null)
+                {
+                    return model.HasValidationErrors;
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(CurrentProjectPath) == false)
+                    {
+                        string json;
+                        dynamic jsonObj;
+                        model = new WorkflowViewModel(false);
+                        json = File.ReadAllText(CurrentProjectPath + "\\project.json");
+                        jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                        string ProjectCurrentDirectory = jsonObj["ProjectPath"];
+                        model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"];
+                        model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
+                        if (model != null)
+                        {
+                            this.ViewOutput();
+                        }
+
+                        return model.HasValidationErrors;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+               
             }
         }
 
@@ -200,7 +235,34 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             get
             {
                 WorkflowViewModel model = this.ActiveWorkflowViewModel;
-                return model == null ? null : model.ValidationErrorsView;
+                if (model != null)
+                {
+                    return model.ValidationErrorsView;
+                }
+                else
+                {  //This is to always show the ValidationErrorsView, based on the Main workflow
+                    if (string.IsNullOrWhiteSpace(CurrentProjectPath) == false)
+                    {
+                        string json;
+                        dynamic jsonObj;
+                        model = new WorkflowViewModel(false);
+                        json = File.ReadAllText(CurrentProjectPath + "\\project.json");
+                        jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                        string ProjectCurrentDirectory = jsonObj["ProjectPath"];
+                        model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"];
+                        model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
+                        if (model != null)
+                        {
+                            this.ViewErrors();
+                        }
+                        return model.ValidationErrorsView;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                
             }
         }
 
@@ -234,7 +296,29 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 }
                 else
                 {
-                    return null;
+                    //This is to always show the Outputwindow, based on the Main workflow
+                    if (string.IsNullOrWhiteSpace(CurrentProjectPath) == false)
+                    {
+                        string json;
+                        dynamic jsonObj;
+                        model = new WorkflowViewModel(false);
+                        json = File.ReadAllText(CurrentProjectPath + "\\project.json");
+                        jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                        string ProjectCurrentDirectory = jsonObj["ProjectPath"];
+                        model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"];
+                        model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
+                        if (model != null)
+                        {
+                            this.ViewOutput();
+                        }
+                        Console.SetOut(model.Output);
+                        return model.OutputView;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                   
                 }
             }
         }
@@ -829,18 +913,21 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             // model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"] + ".xaml";
             //  model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"] + ".xaml");
             model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"];
-              model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
+            model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
             if (model != null)
             {
-                model.RunWorkflow();
-                this.ViewOutput();
-                this.SetSelectedTab(ContentTypes.Output);
                 if (this.HasValidationErrors)
                 {
+                    Console.WriteLine($"There was an error in '{jsonObj["Main"]}', can't run");
                     this.ViewErrors();
                     this.SetSelectedTab(ContentTypes.Errors);
                 }
-
+                else
+                {
+                    model.RunWorkflow();
+                    this.ViewOutput();
+                    this.SetSelectedTab(ContentTypes.Output);
+                }
                 // model.RunWorkflow();
             }
         }
@@ -1061,11 +1148,16 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 this.SetSelectedTab(ContentTypes.Output);
                 if (this.HasValidationErrors)
                 {
+                    Console.WriteLine($"There was an error in '{ActiveWorkflowViewModel.DisplayName}', can't run");
                     this.ViewErrors();
                     this.SetSelectedTab(ContentTypes.Errors);
                 }
+                else
+                {
+                    model.RunWorkflow();
+                }
 
-                model.RunWorkflow();
+        
             }
         }
 
@@ -1785,9 +1877,15 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                     //ActivitiesToolWindow.Content = toolboxControl;
                     _PropertiesToolWindow.Content = PropertyInspectorView;
                     _OutlineToolWindow.Content = OutlineView;
-                    _OutputToolWindow.Content = OutputView;
+                    //_OutputToolWindow.Content = OutputView;
                     _ErrorsToolWindow.Content = ValidationErrorsView;
                     _DebugToolWindow.Content = DebugView;
+                }
+
+                if (dockingManager.DocumentWindows.Count <= 0)
+                {
+                    _PropertiesToolWindow.Content = null;
+                    _OutlineToolWindow.Content = null;
                 }
                 
 

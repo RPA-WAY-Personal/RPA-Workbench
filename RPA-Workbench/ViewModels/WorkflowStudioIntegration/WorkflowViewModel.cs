@@ -30,6 +30,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
     using System.Xml;
     using System.Collections;
     using System.Xaml;
+    using ActiproSoftware.Windows.Controls.Grids;
 
     public class WorkflowViewModel : ViewModelBase
     {
@@ -40,7 +41,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         private ValidationErrorsUserControl validationErrorsView;
         private bool modelChanged;
         private TextWriter output;
-        private TextBox outputTextBox;
+        private TreeListBox outputTextBox;
         private RPA.Workbench.AutomationEngine.Execution.IWorkflowRunner runner;
         private int id;
         private string fullFilePath;
@@ -63,7 +64,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
 
             this.validationErrorsView = new ValidationErrorsUserControl();
 
-            this.outputTextBox = new TextBox();
+            this.outputTextBox = new TreeListBox();
             this.output = new TextBoxStreamWriter(this.outputTextBox, this.DisplayName);
             this.disableDebugViewOutput = disableDebugViewOutput;
 
@@ -331,7 +332,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             {
                
                 process.Start();
-                this.outputTextBox.Clear();
+                
                 process.OutputDataReceived += (sender, line) =>
                 {
   
@@ -346,7 +347,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 process.BeginOutputReadLine();
 
                 //process.WaitForExit();
-                if (this.outputTextBox.Text.Contains("Workflow Complete"))
+                if (this.outputTextBox.Items.Contains("Workflow Complete"))
                 {
                     process.Kill();
                 }
@@ -369,7 +370,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 MessageBox.Show(string.Format(Resources.ErrorRunningDialogMessage, ExceptionHelper.FormatStackTrace(e)), Resources.ErrorRunningDialogTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
+        RPA.Workbench.AutomationEngine.Execution.IWorkflowDebugger debugger;
         public void DebugWorkflow()
         {
             if (this.GetRootType() == typeof(WorkflowService))
@@ -378,13 +379,15 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             }
             else
             {
-               // this.runner = new WorkflowDebugger(this.output, this.DisplayName, this.workflowDesigner, this.disableDebugViewOutput);
+              
+                debugger = new RPA.Workbench.AutomationEngine.Execution.WorkflowDebugger(this.output, this.DisplayName, this.workflowDesigner, this.disableDebugViewOutput);
+                //this.runner = new RPA.Workbench.AutomationEngine.Execution.WorkflowDebugger(this.output, this.DisplayName, this.workflowDesigner, this.disableDebugViewOutput);
             }
 
             try
             {
-                this.outputTextBox.Clear();
-                this.runner.Run();
+                this.outputTextBox.Items.Clear();
+                this.debugger.Run();
             }
             catch (Exception e)
             {
