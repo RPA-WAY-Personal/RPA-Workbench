@@ -46,13 +46,13 @@
     <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.DesignerViewExpandAllCollapseAllButtonMouseOverColorKey}" x:Uid="SolidColorBrush_38" Color="#FF555555" />
     <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.DesignerViewExpandAllCollapseAllPressedColorKey}" x:Uid="SolidColorBrush_39" Color="#FF333333" />
     <!--Property Inspector View-->
-    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorBackgroundBrushKey}" x:Uid="SolidColorBrush_40" Color="White"  />
-    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorBorderBrushKey}" x:Uid="SolidColorBrush_41" Color="#FFA8B3C2" />
+    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorBackgroundBrushKey}" x:Uid="SolidColorBrush_40" Color="Transparent"  />
+    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorBorderBrushKey}" x:Uid="SolidColorBrush_41" Color="Transparent" />
     <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorCategoryCaptionTextBrushKey}" x:Uid="SolidColorBrush_42" Color="Black" />
-    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorPaneBrushKey}" x:Uid="SolidColorBrush_43" Color="#F5F6F6" />
-    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorPopupBrushKey}" x:Uid="SolidColorBrush_44" Color="White" />
+    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorPaneBrushKey}" x:Uid="SolidColorBrush_43" Color="White" />
+    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorPopupBrushKey}" x:Uid="SolidColorBrush_44" Color="Transparent" />
     <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorSelectedBackgroundBrushKey}" x:Uid="SolidColorBrush_45" Color="White" />
-    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorSelectedForegroundBrushKey}" x:Uid="SolidColorBrush_46" Color="#FFA8B3C2" />
+    <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorSelectedForegroundBrushKey}" x:Uid="SolidColorBrush_46" Color="#288448" />
     <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorTextBrushKey}" x:Uid="SolidColorBrush_47" Color="Black" />
     <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorToolBarBackgroundBrushKey}" x:Uid="SolidColorBrush_48" Color="White" />
     <SolidColorBrush x:Key="{x:Static swd:WorkflowDesignerColors.PropertyInspectorToolBarItemHoverBackgroundBrushKey}" x:Uid="SolidColorBrush_49" Color="#FFFFFCF4" />

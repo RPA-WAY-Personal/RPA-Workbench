@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using RPA_Workbench.Views.StartupMenu;
 using System.Windows;
+using ActiproSoftware.Windows.Themes;
+using ActiproSoftware.Windows.Themes.Generation;
+
 namespace RPA_Workbench.ViewModels.StartupMenu
 {
     public class ParentStartupViewModel
@@ -27,6 +30,34 @@ namespace RPA_Workbench.ViewModels.StartupMenu
             localMainwindow = mainWindow;
             localParentStartupWindow = parentStartupWindow;
             startPageViewModel.LoadStartPage(parentStartupWindow, mainWindow);
+
+            ThemeManager.BeginUpdate();
+            try
+            {
+                // Register the theme definitions for your application
+                ThemeManager.RegisterThemeDefinition(new ThemeDefinition("StartupWindowTheme")
+                {
+                    ColorPaletteKind = ColorPaletteKind.Office,
+                    ArrowKind = ArrowKind.FilledTriangle,
+                    DockGuideColorFamilyName = ColorFamilyName.Green,
+                    PreviewTabColorFamilyName = ColorFamilyName.Gray,
+                    PrimaryAccentColorFamilyName = ColorFamilyName.Green,
+                    WindowColorFamilyName = ColorFamilyName.Green,
+                    Intent = ThemeIntent.White,
+                    WindowTitleBarBackgroundKind = WindowTitleBarBackgroundKind.Window
+
+                });
+
+                // Use the Actipro styles for native WPF controls that look great with Actipro's control products
+                ThemeManager.AreNativeThemesEnabled = true;
+                ThemeManager.SetTheme(parentStartupWindow, "StartupWindowTheme");
+                // Set the current app theme via a registered theme definition name
+                //ThemeManager.CurrentTheme = "Custom";
+            }
+            finally
+            {
+                ThemeManager.EndUpdate();
+            }
         }
 
         public bool PageControlsVisibility

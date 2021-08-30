@@ -14,7 +14,7 @@
         <ViewModels:ProjectWindowViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <TreeView x:Name="SolutionTreeViewBox" Foreground="Black" Margin="0,34,0,0" AllowDrop="True" BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch" >
+        <TreeView x:Name="SolutionTreeViewBox" Foreground="Black" Margin="0,34,0,0" AllowDrop="True" BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch" Background="{x:Null}" >
             <TreeView.Resources>
                 <Style TargetType="{x:Type TreeViewItem}"  x:Name="TreeViewItemStyle" >
                     <Setter Property="HeaderTemplate">
@@ -40,7 +40,7 @@
                 </ribbon:ContextMenu>
             </TreeView.ContextMenu>-->
         </TreeView>
-        <ribbon:MiniToolBar x:Name="TopToolbar" VerticalAlignment="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+        <ribbon:MiniToolBar x:Name="TopToolbar" VerticalAlignment="Top" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Background="{x:Null}" BorderThickness="0,0,0,1">
             <ribbon:Button Command="{Binding RefreshProjectListCommand}" ImageSourceSmall="/1. Resources/ProjectWindow Images/Refresh.png" x:Name="btnRefresh" Height="28" Width="28" Foreground="{x:Null}"  RenderTransformOrigin="2.542,0.539" BorderThickness="0,0,0,3" ImageSourceSmallSize="25,25" HorizontalContentAlignment="Center"/>
             <ribbon:Button Command="{Binding OpenProjectFolderCommand}" ImageSourceSmall="/1. Resources/ProjectWindow Images/Folder Dark -32.png" x:Name="btnOpenSolutionInExplorer" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="28" Height="28"  Margin="10,0,0,0" ImageSourceSmallSize="23,23"/>
             <ribbon:Button Command="{Binding DeleteFileorFolderCommand}" ImageSourceSmall="/1. Resources/ProjectWindow Images/DeleteIcon.png" x:Name="btnDeleteFile" BorderBrush="{x:Null}" Foreground="{x:Null}" Width="28" Height="28" Margin="10,0,0,0" ImageSourceSmallSize="23,23"/>

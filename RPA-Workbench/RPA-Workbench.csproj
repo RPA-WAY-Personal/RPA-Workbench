@@ -64,15 +64,21 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>1. Resources\RPA-WAY Images\Workbench Icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ActiproSoftware.DataGrid.Contrib.Wpf, Version=21.1.1.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
-    <Reference Include="ActiproSoftware.Docking.Wpf, Version=21.1.1.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
-    <Reference Include="ActiproSoftware.Grids.Wpf, Version=21.1.1.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
-    <Reference Include="ActiproSoftware.Navigation.Wpf, Version=21.1.1.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
-    <Reference Include="ActiproSoftware.Ribbon.Wpf, Version=21.1.1.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
-    <Reference Include="ActiproSoftware.Shared.Wpf, Version=21.1.1.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
-    <Reference Include="ActiproSoftware.Shell.Wpf, Version=21.1.1.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
-    <Reference Include="ActiproSoftware.Views.Wpf, Version=21.1.1.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.DataGrid.Contrib.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Docking.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Editors.Interop.DataGrid.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Editors.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Grids.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Navigation.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Ribbon.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Shared.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Shell.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Views.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Wizard.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
     <Reference Include="Meziantou.Framework.FullPath, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Meziantou.Framework.FullPath.1.0.7\lib\net472\Meziantou.Framework.FullPath.dll</HintPath>
     </Reference>
@@ -414,7 +420,14 @@
     <Resource Include="1. Resources\ProjectWindow Images\Remove-Package - 32.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="1. Resources\MainWindow Images\ToolWindow Images\ClearListImage.png" />
+    <Resource Include="1. Resources\MainWindow Images\ToolWindow Images\OutputWindow\ClearListImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1. Resources\MainWindow Images\ToolWindow Images\OutputWindow\Info.png" />
+    <Resource Include="1. Resources\MainWindow Images\ToolWindow Images\OutputWindow\Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1. Resources\RPA-WAY Images\Workbench Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
