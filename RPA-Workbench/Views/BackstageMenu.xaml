@@ -11,8 +11,8 @@
              xmlns:ViewModels="clr-namespace:RPA_Workbench.ViewModels"
              x:Class="RPA_Workbench.Views.BackstageMenu"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <ribbon:Button Label="Start" Command="{Binding OpenStartPageCommand}" Background="{x:Null}" StaysOpenOnClick="True">
+             d:DesignHeight="450" d:DesignWidth="800" TitleBarHeight="4">
+    <ribbon:Button Label="Start" Command="{Binding OpenStartPageCommand}" Background="{x:Null}" StaysOpenOnClick="True" >
         <!--<ribbon:Button.ImageSourceSmall>
             <BitmapImage UriSource="pack://application:,,,/ActiproSoftware.Ribbon.Wpf;component/Products/Ribbon/Images/ButtonDefault32.png" UriCachePolicy="{x:Null}"/>
         </ribbon:Button.ImageSourceSmall>-->
@@ -23,6 +23,8 @@
         </ribbon:Button.ImageSourceSmall>-->
     </ribbon:Button>
     <ribbon:Separator></ribbon:Separator>
-    <ribbon:BackstageTab x:Name="SettingsTabs" Header="Settings" Background="{x:Null}" BorderBrush="{x:Null}"/>
+    <ribbon:BackstageTab x:Name="SettingsTab" Header="Settings" Background="{x:Null}" BorderBrush="{x:Null}">
+        <DockPanel x:Name="SettingsTabContent"/>
+    </ribbon:BackstageTab>
 
 </ribbon:Backstage>

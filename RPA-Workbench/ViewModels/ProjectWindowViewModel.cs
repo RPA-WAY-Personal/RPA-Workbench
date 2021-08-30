@@ -358,7 +358,7 @@ namespace RPA_Workbench.ViewModels
 
             //MessageBox.Show(ProjectDirectory + "\\" + SelectedFileName);
 
-            mainWindowViewModelLocal.ActivitiesView.Categories.Clear();
+            //mainWindowViewModelLocal.ActivitiesView.Categories.Clear();
             mainWindowViewModelLocal.SelectedDependencyPath.Add(ProjectDirectory + "\\" + SelectedFileName + ".dll");
             mainWindowLocal.btnDeletePackage.Command.Execute(mainWindowLocal.btnDeletePackage.CommandParameter);
             mainWindowViewModelLocal.RefreshToolbox();

@@ -13,9 +13,11 @@ namespace RPA.Workbench.AutomationEngine.Execution
     using System.Activities.XamlIntegration;
     using System.Diagnostics;
     using System.IO;
+    using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Drawing;
     using RPA.Workbench.AutomationEngine.Properties;
     using RPA.Workbench.AutomationEngine.Utilities;
 
@@ -28,6 +30,35 @@ namespace RPA.Workbench.AutomationEngine.Execution
 
         private string workflowName;
         string WorkFlowFile;
+
+        [DllImport("User32")]
+        private static extern int ShowWindow(int hwnd, int nCmdShow);
+        private int hWnd;
+        /*
+         Hide Window = 0
+         Minimize Window = 1
+         Maxmize Window = 2
+         Restore Window = 9
+
+        ex:
+        private const int SW_HIDE = 0;
+         */
+
+        enum States
+        {
+            SW_HIDE = 0,
+            SW_SHOWNORMAL = 1,
+            SW_SHOWMINIMIZED = 2,
+            SW_MAXIMIZE = 3,
+            SW_SHOWNOACTIVATE = 4,
+            SW_SHOW = 5,
+            SW_MINIMIZE = 6,
+            SW_SHOWMINNOACTIVE = 7,
+            SW_SHOWNA = 8,
+            SW_RESTORE = 9,
+            SW_SHOWDEFAULT = 10,
+            SW_FORCEMINIMIZE = 11
+        }
         public WorkflowRunner(TextWriter output, string workflowName, WorkflowDesigner workflowDesigner)
         {
             this.output = output;
@@ -155,13 +186,59 @@ namespace RPA.Workbench.AutomationEngine.Execution
             this.running = false;
             Completed = true;
             Console.WriteLine("Workflow Complete");
-           
-            foreach (var process in Process.GetProcessesByName("AutomationEngine"))
+
+            Process[] p = Process.GetProcessesByName("RPA-Workbench");
+            hWnd = (int)p[0].MainWindowHandle; // 
+
+            //If RPA-Workbench window is minimized, then restore it when workflow is done
+            var placement = GetPlacement(p[0].MainWindowHandle);
+            if (placement.showCmd.ToString() == "Minimized")
             {
-                process.Kill();
+                ShowWindow(hWnd, (int)States.SW_RESTORE);
             }
+
+            System.Threading.Thread.Sleep(1000);
+            Process[] automationEngineProcess = Process.GetProcessesByName("AutomationEngine");
+            automationEngineProcess[0].Kill();
+
+
             //StatusViewModel.SetStatusText(string.Format(Resources.CompletedStatus, e.CompletionState.ToString()), this.workflowName);
         }
+
+        #region RPA-WORKBENCH Windows states
+        private static WINDOWPLACEMENT GetPlacement(IntPtr hwnd)
+        {
+            WINDOWPLACEMENT placement = new WINDOWPLACEMENT();
+            placement.length = Marshal.SizeOf(placement);
+            GetWindowPlacement(hwnd, ref placement);
+            return placement;
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool GetWindowPlacement(
+            IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+
+        [Serializable]
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct WINDOWPLACEMENT
+        {
+            public int length;
+            public int flags;
+            public ShowWindowCommands showCmd;
+            public System.Drawing.Point ptMinPosition;
+            public System.Drawing.Point ptMaxPosition;
+            public System.Drawing.Rectangle rcNormalPosition;
+        }
+
+        internal enum ShowWindowCommands : int
+        {
+            Hide = 0,
+            Normal = 1,
+            Minimized = 2,
+            Maximized = 3,
+        }
+        #endregion
 
         private void WorkflowAborted(WorkflowApplicationAbortedEventArgs e)
         {

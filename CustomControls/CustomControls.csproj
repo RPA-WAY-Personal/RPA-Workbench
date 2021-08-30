@@ -36,6 +36,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Page Include="CustomToolbox\Toolbox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\IconButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -46,13 +50,22 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="ActiproSoftware.Docking.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Editors.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Grids.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Navigation.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
     <Reference Include="ActiproSoftware.Ribbon.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
     <Reference Include="ActiproSoftware.Shared.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Shell.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Views.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
@@ -60,6 +73,8 @@
     <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Presentation" />
+    <Reference Include="System.Workflow.Activities" />
+    <Reference Include="System.Workflow.ComponentModel" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
@@ -68,6 +83,21 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomToolbox\CategoryTreeNodeModel.cs" />
+    <Compile Include="CustomToolbox\ControlData.cs" />
+    <Compile Include="CustomToolbox\ControlDataRepository.cs" />
+    <Compile Include="CustomToolbox\ControlTreeNodeModel.cs" />
+    <Compile Include="CustomToolbox\CustomTemplateSelector.cs" />
+    <Compile Include="CustomToolbox\CustomTreeListBoxItemAdapter.cs" />
+    <Compile Include="CustomToolbox\DefaultTreeListBoxItemAdapter.cs" />
+    <Compile Include="CustomToolbox\EmptyPlaceholderTreeNodeModel.cs" />
+    <Compile Include="CustomToolbox\FavoritesCategoryTreeNodeModel.cs" />
+    <Compile Include="CustomToolbox\Toolbox.xaml.cs">
+      <DependentUpon>Toolbox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomToolbox\ToolboxTreeNodeModel.cs" />
+    <Compile Include="CustomToolbox\TreeNodeModel.cs" />
+    <Compile Include="CustomToolbox\TreeNodeModelStringFilter.cs" />
     <Compile Include="Views\IconButton.cs" />
     <Compile Include="Views\CustomMessageBox.xaml.cs">
       <DependentUpon>CustomMessageBox.xaml</DependentUpon>

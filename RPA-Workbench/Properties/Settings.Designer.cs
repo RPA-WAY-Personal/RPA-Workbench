@@ -46,5 +46,17 @@ namespace RPA_Workbench.Properties {
                 this["IDE_Serialization"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Setting_MinimizeOnRun {
+            get {
+                return ((bool)(this["Setting_MinimizeOnRun"]));
+            }
+            set {
+                this["Setting_MinimizeOnRun"] = value;
+            }
+        }
     }
 }

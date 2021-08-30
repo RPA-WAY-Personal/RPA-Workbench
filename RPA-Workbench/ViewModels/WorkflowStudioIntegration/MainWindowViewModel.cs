@@ -90,6 +90,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         private ICommand _CloseProject;
         private ICommand _RunProjectFromJson;
         private ICommand _OpenBackstage;
+        private ICommand _OpenSettingsTab;
         private TabbedMdiHost tabsPane;
         private IDictionary<ContentTypes, DocumentWindow> dockableContents;
         private ToolboxControl toolboxControl;
@@ -102,7 +103,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
 
         public string Filename; //Used on Open File
         MainWindow mainWindowLocal;
-        Views.BackstageMenu backstageMenuLocal;
+        Views.BackstageMenu backstageMenuLocal = new Views.BackstageMenu();
         string _currentProjectPath;
         public string CurrentProjectPath;
 
@@ -155,8 +156,9 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             this.ViewErrors();
             this.UpdateViews();
             RelaySetup();
+            LoadBackstageTabs();
 
-          
+
         }
 
        
@@ -168,6 +170,20 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             CloseProjectCommand = new RelayCommand(new Action<object>(CloseProject));
             RunProjectFromJsonCommand = new RelayCommand(new Action<object>(StartWithoutDebuggingFromJson));
             OpenBackstageCommand = new RelayCommand(new Action<object>(StartWithoutDebuggingFromJson));
+        }
+
+        void LoadBackstageTabs()
+        {
+            try
+            {
+                //Settings
+                Views.BackstageMenu_Tabs.SettingsPanel settingsPanel = new Views.BackstageMenu_Tabs.SettingsPanel();
+                backstageMenuLocal.SettingsTabContent.Children.Add(settingsPanel);
+            }
+            catch (NullReferenceException)
+            {
+            }
+          
         }
         private void DockingManager_KeyDown(object sender, KeyEventArgs e)
         {
@@ -382,6 +398,12 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         {
             get { return _OpenBackstage; }
             set { _OpenBackstage = value; }
+        }
+
+        public ICommand OpenSettingsCommand
+        {
+            get { return _OpenSettingsTab; }
+            set { _OpenSettingsTab = value; }
         }
 
         #endregion
@@ -924,7 +946,15 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 }
                 else
                 {
-                    model.RunWorkflow();
+                    if (RPA_Workbench.Properties.Settings.Default.Setting_MinimizeOnRun == true)
+                    {
+                        mainWindowLocal.WindowState = WindowState.Minimized;
+                        model.RunWorkflow();
+                    }
+                    else
+                    {
+                        model.RunWorkflow();
+                    }
                     this.ViewOutput();
                     this.SetSelectedTab(ContentTypes.Output);
                 }
@@ -1154,11 +1184,19 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 }
                 else
                 {
-                    model.RunWorkflow();
+                    if (RPA_Workbench.Properties.Settings.Default.Setting_MinimizeOnRun == true)
+                    {
+                        mainWindowLocal.WindowState = WindowState.Minimized;
+                        model.RunWorkflow();
+                    }
+                    else
+                    {
+                        model.RunWorkflow();
+                    }
+                    
                 }
-
-        
             }
+
         }
 
         private void Abort()
