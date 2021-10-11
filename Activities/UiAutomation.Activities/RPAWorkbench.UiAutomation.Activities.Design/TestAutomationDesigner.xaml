@@ -1,0 +1,62 @@
+﻿<sap:ActivityDesigner xmlns:ribbon="http://schemas.actiprosoftware.com/winfx/xaml/ribbon" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:sapc="clr-namespace:System.Activities.Presentation.Converters;assembly=System.Activities.Presentation"
+    xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation" xmlns:local="clr-namespace:RPAWorkbench.UiAutomation.Activities" x:Class="RPAWorkbench.UiAutomation.Activities.TestAutomationDesigner"
+    Height="96.747" Width="200.833" Background="{x:Null}">
+
+    <sap:ActivityDesigner.Resources>
+        <ResourceDictionary>
+            <!--<ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RPAWorkbench.UiAutomation.Activities;component/Themes/Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>-->
+            <sapc:ArgumentToExpressionConverter x:Key="ArgumentToExpressionConverter" />
+
+
+            <DataTemplate x:Key="Collapsed">
+                <StackPanel>
+                    <TextBlock Foreground="#FF787878" HorizontalAlignment="Center" FontStyle="Italic"><Run Text="Double-click to view"/></TextBlock>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="Expanded">
+                <StackPanel VerticalAlignment="Top">
+                    <Label Content="Filename" HorizontalAlignment="Left" Margin="0,-6,0,0" VerticalAlignment="Top" Height="23" Padding="0,5"/>
+                    <sapv:ExpressionTextBox x:Name="txtFileName" ExpressionType="{Binding ModelItem.Properties[FileName].PropertyType.GenericTypeArguments[0]}" OwnerActivity="{Binding ModelItem}" HintText="Enter Filename here" UseLocationExpression="False" Margin="1,2,1,5" Expression="{Binding ModelItem.FileName, ConverterParameter=In, Converter={StaticResource ArgumentToExpressionConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#FF4F3D3D" BorderThickness="0"/>
+                    <!--<Button Content="Click Me" Click="Button_Click" Background="{x:Null}"/>-->
+                    <ribbon:Button Label="Click Me" Click="Button_Click" Background="{x:Null}" HorizontalContentAlignment="Center" BorderBrush="Black"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <Style x:Key="ExpandOrCollapsedStyle" TargetType="{x:Type ContentPresenter}">
+                <Setter Property="ContentTemplate" Value="{DynamicResource Collapsed}"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ShowExpanded}" Value="true">
+                        <Setter Property="ContentTemplate" Value="{DynamicResource Expanded}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+
+    </sap:ActivityDesigner.Resources>
+    <sap:ActivityDesigner.Icon>
+        <DrawingBrush>
+            <DrawingBrush.Drawing>
+                <ImageDrawing>
+                    <ImageDrawing.Rect>
+                        <Rect Location="0,0" Size="25,25" />
+                    </ImageDrawing.Rect>
+                    <ImageDrawing.ImageSource>
+                        <BitmapImage UriSource="icons8-open-file-folder-32.png" />
+                    </ImageDrawing.ImageSource>
+                </ImageDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </sap:ActivityDesigner.Icon>
+
+    <Grid x:Name="mainGrid" Margin="0,-5,0,-44" RenderTransformOrigin="0.5,0.455">
+        <ContentPresenter Style="{DynamicResource ExpandOrCollapsedStyle}" Content="{Binding}" Margin="0,0,0,-11" />
+    </Grid>
+</sap:ActivityDesigner>

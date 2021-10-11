@@ -9,7 +9,6 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ActiproSoftware.Windows.Controls.Ribbon;
@@ -17,6 +16,8 @@ using ActiproSoftware.Windows.Themes;
 using ActiproSoftware.Windows.Serialization;
 using ActiproSoftware.Windows.Controls.Docking.Serialization;
 using RPA_Workbench.Properties;
+using RPA.Workbench.Input;
+using RPA.Workbench.Interfaces;
 
 namespace RPA_Workbench
 {
@@ -25,7 +26,8 @@ namespace RPA_Workbench
     /// </summary>
     public partial class MainWindow : RibbonWindow
     {
-        public ViewModels.WorkflowStudioIntegration.MainWindowViewModel mainWindowViewModel;
+		internal static MainWindow instance;
+		public ViewModels.WorkflowStudioIntegration.MainWindowViewModel mainWindowViewModel;
         public Views.BackstageMenu MainBackStageMenu = null;
 		SolidColorBrush NormalBGColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF217346"));
 		SolidColorBrush NormalFGColor = new SolidColorBrush(Colors.White);
@@ -35,6 +37,8 @@ namespace RPA_Workbench
         {
 			LoadLayoutSerializer();
 			InitializeComponent();
+			
+
             MainBackStageMenu = backstageMenuOptionalAssign;
             // ViewModel.MainWindowViewModel mainWindowViewModel = new ViewModel.MainWindowViewModel();
             mainWindowViewModel = new ViewModels.WorkflowStudioIntegration.MainWindowViewModel(PropertiesToolWindow,OutlineToolwindow,OutputToolWindow,ErrorListToolWindow,DebuggerToolWindow, MainDockSite,MDIHost,DebuggerToolWindow,this, backstageMenuOptionalAssign, CurrentProjectPath);
@@ -129,6 +133,287 @@ namespace RPA_Workbench
 			ErrorListToolWindow.CanClose = false;
 			DebuggerToolWindow.CanClose = false;
 		}
+		//public object SelectedContent
+		//{
+		//	get
+		//	{
+		//		if (this.MainDockSite == null) return null;
+		//		var b = MainDockSite.ActiveWindow;
+		//		return b;
+		//	}
+		//}
+
+		//internal void OnRecord(object _item)
+		//{
+		//	//if (!(SelectedContent is Views.WFDesigner.WFDesigner)) return;
+		//	//Log.FunctionIndent("MainWindow", "OnRecord");
+		//	//try
+		//	//{
+		//	//	var designer = (Views.WFDesigner.WFDesigner)SelectedContent;
+		//	//	designer.ReadOnly = true;
+		//	//	designer.Lastinserted = null;
+		//	//	designer.Lastinsertedmodel = null;
+		//	//	StopDetectorPlugins();
+		//	//	InputDriver.Instance.OnKeyDown += OnKeyDown;
+		//	//	InputDriver.Instance.OnKeyUp += OnKeyUp;
+		//	//	StartRecordPlugins(true);
+		//	//	InputDriver.Instance.CallNext = false;
+		//	//	if (this.Minimize) GenericTools.Minimize();
+		//	//}
+		//	//catch (Exception ex)
+		//	//{
+		//	//	Log.Error(ex.ToString());
+		//	//}
+		//	//Log.FunctionOutdent("MainWindow", "OnRecord");
+		//}
+		//bool isRecording;
+		//RPA.Workbench.Interfaces.Overlay.OverlayWindow _overlayWindow = null;
+		//private void StartRecordPlugins(bool all)
+		//{
+		//	Log.FunctionIndent("MainWindow", "StartRecordPlugins");
+		//	try
+		//	{
+		//		isRecording = true;
+		//		var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
+		//		p.OnUserAction += OnUserAction;
+		//		if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
+		//		p.Start();
+		//		if (_overlayWindow == null && Config.local.record_overlay)
+		//		{
+		//			_overlayWindow = new RPA.Workbench.Interfaces.Overlay.OverlayWindow(true)
+		//			{
+		//				BackColor = System.Drawing.Color.PaleGreen,
+		//				Visible = true,
+		//				TopMost = true
+		//			};
+		//		}
+
+		//		p = Plugins.recordPlugins.Where(x => x.Name == "SAP").FirstOrDefault();
+		//		if (p != null && (all == true || all == false))
+		//		{
+		//			p.OnUserAction += OnUserAction;
+		//			if (Config.local.record_overlay) p.OnMouseMove += OnMouseMove;
+		//			p.Start();
+		//		}
+
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Log.Error(ex.ToString());
+		//	}
+		//	Log.FunctionOutdent("MainWindow", "StartRecordPlugins");
+		//}
+		//private void StopRecordPlugins(bool all)
+		//{
+		//	Log.FunctionIndent("MainWindow", "StopRecordPlugins");
+		//	try
+		//	{
+		//		isRecording = false;
+		//		var p = Plugins.recordPlugins.Where(x => x.Name == "Windows").First();
+		//		p.OnUserAction -= OnUserAction;
+		//		if (Config.local.record_overlay) p.OnMouseMove -= OnMouseMove;
+		//		p.Stop();
+
+		//		p = Plugins.recordPlugins.Where(x => x.Name == "SAP").FirstOrDefault();
+		//		if (p != null && (all == true || all == false))
+		//		{
+		//			p.OnUserAction -= OnUserAction;
+		//			p.Stop();
+		//		}
+
+		//		if (_overlayWindow != null)
+		//		{
+		//			GenericTools.RunUI(_overlayWindow, () =>
+		//			{
+		//				try
+		//				{
+		//					_overlayWindow.Visible = true;
+		//					_overlayWindow.Dispose();
+		//				}
+		//				catch (Exception ex)
+		//				{
+		//					Log.Error(ex.ToString());
+		//				}
+		//			});
+		//		}
+		//		_overlayWindow = null;
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Log.Error(ex.ToString());
+		//	}
+		//	Log.FunctionOutdent("MainWindow", "StopRecordPlugins");
+		//}
+		//public void OnMouseMove(IRecordPlugin sender, IRecordEvent e)
+		//{
+		//	if (!Config.local.record_overlay) return;
+		//	foreach (var p in Plugins.recordPlugins)
+		//	{
+		//		if (p.Name != sender.Name)
+		//		{
+		//			if (p.ParseMouseMoveAction(ref e)) break;
+		//		}
+		//	}
+
+		//	// e.Element.Highlight(false, System.Drawing.Color.PaleGreen, TimeSpan.FromSeconds(1));
+		//	if (e.Element != null && _overlayWindow != null)
+		//	{
+
+		//		GenericTools.RunUI(_overlayWindow, () =>
+		//		{
+		//			try
+		//			{
+		//				if (_overlayWindow != null)
+		//				{
+		//					_overlayWindow.Visible = true;
+		//					_overlayWindow.Bounds = e.Element.Rectangle;
+		//				}
+		//			}
+		//			catch (Exception)
+		//			{
+		//			}
+		//		});
+		//	}
+		//	else if (_overlayWindow != null)
+		//	{
+		//		GenericTools.RunUI(_overlayWindow, () =>
+		//		{
+		//			try
+		//			{
+		//				_overlayWindow.Visible = false;
+		//			}
+		//			catch (Exception)
+		//			{
+		//			}
+		//		});
+		//	}
+		//}
+		//public void OnUserAction(IRecordPlugin sender, IRecordEvent e)
+		//{
+		//	Log.FunctionIndent("MainWindow", "OnUserAction");
+		//	if (sender.Name == "Windows") StopRecordPlugins(false);
+		//	AutomationHelper.syncContext.Post(o =>
+		//	{
+		//		IPlugin plugin = sender;
+		//		try
+		//		{
+		//			if (sender.Name == "Windows")
+		//			{
+		//				// TODO: Add priotrity, we could create an ordered list in config ?
+		//				foreach (var p in Plugins.recordPlugins)
+		//				{
+		//					if (p.Name != sender.Name)
+		//					{
+		//						try
+		//						{
+		//							if (p.ParseUserAction(ref e))
+		//							{
+		//								plugin = p;
+		//								break;
+		//							}
+		//						}
+		//						catch (Exception ex)
+		//						{
+		//							Log.Error(ex.ToString());
+		//						}
+		//					}
+		//				}
+		//			}
+		//			if (e.a == null)
+		//			{
+		//				if (sender.Name == "Windows") StartRecordPlugins(false);
+		//				if (e.ClickHandled == false)
+		//				{
+		//					NativeMethods.SetCursorPos(e.X, e.Y);
+		//					InputDriver.Click(e.Button);
+		//				}
+		//				Log.Function("MainWindow", "OnUserAction", "Action is null");
+		//				return;
+		//			}
+		//			if (SelectedContent is MainWindowViewModel.workspaceViewModel.WorkflowDesigner view)
+		//			{
+
+		//				var VirtualClick = Config.local.use_virtual_click;
+		//				if (!e.SupportVirtualClick) VirtualClick = false;
+		//				e.a.AddActivity(new RPA.Workbench.Windows.ClickElement
+		//				{
+		//					Element = new System.Activities.InArgument<IElement>()
+		//					{
+		//						Expression = new Microsoft.VisualBasic.Activities.VisualBasicValue<IElement>("item")
+		//					},
+		//					OffsetX = e.OffsetX,
+		//					OffsetY = e.OffsetY,
+		//					Button = (int)e.Button,
+		//					VirtualClick = VirtualClick,
+		//					AnimateMouse = Config.local.use_animate_mouse
+		//				}, "item");
+		//				if (e.SupportSelect)
+		//				{
+		//					var win = new Views.InsertSelect(e.Element)
+		//					{
+		//						Topmost = true
+		//					};
+		//					isRecording = false;
+		//					InputDriver.Instance.CallNext = true;
+		//					win.Owner = this;
+		//					if (win.ShowDialog() == true)
+		//					{
+		//						e.ClickHandled = true;
+		//						if (!string.IsNullOrEmpty(win.SelectedItem.Value))
+		//						{
+		//							e.a.AddInput(win.SelectedItem.Value, e.Element);
+		//						}
+		//						else
+		//						{
+		//							e.a.AddInput(win.SelectedItem.Name, e.Element);
+		//						}
+
+		//					}
+		//					else
+		//					{
+		//						e.SupportSelect = false;
+		//					}
+		//					InputDriver.Instance.CallNext = false;
+		//					isRecording = true;
+		//				}
+		//				else if (e.SupportInput)
+		//				{
+		//					var win = new Views.InsertText
+		//					{
+		//						Topmost = true
+		//					};
+		//					isRecording = false;
+		//					win.Owner = this;
+		//					if (win.ShowDialog() == true)
+		//					{
+		//						e.a.AddInput(win.Text, e.Element);
+		//					}
+		//					else { e.SupportInput = false; }
+		//					isRecording = true;
+		//				}
+
+		//				view.ReadOnly = false;
+		//				view.Lastinserted = e.a.Activity;
+		//				view.Lastinsertedmodel = view.AddRecordingActivity(e.a.Activity, plugin);
+		//				view.ReadOnly = true;
+		//				if (e.ClickHandled == false && e.SupportInput == false)
+		//				{
+		//					NativeMethods.SetCursorPos(e.X, e.Y);
+		//					InputDriver.Click(e.Button);
+		//				}
+		//				System.Threading.Thread.Sleep(500);
+		//			}
+		//			if (sender.Name == "Windows") StartRecordPlugins(false);
+		//		}
+		//		catch (Exception ex)
+		//		{
+		//			MessageBox.Show(ex.Message);
+		//			Show();
+		//			Log.Error(ex.ToString());
+		//		}
+		//	}, null);
+		//	Log.FunctionOutdent("MainWindow", "OnUserAction");
+		//}
 
 		#region Layout Serializer
 		//LAYOUT SERIALIZER

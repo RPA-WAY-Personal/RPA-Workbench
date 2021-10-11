@@ -1,0 +1,3 @@
+﻿namespace RPAWorkbench.Shared.Localization
+{
+}

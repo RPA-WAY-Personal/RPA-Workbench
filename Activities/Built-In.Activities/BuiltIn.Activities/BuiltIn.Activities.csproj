@@ -1,0 +1,379 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B4B8607A-01E6-4391-8201-C79E26B62A03}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BuiltIn.Activities</RootNamespace>
+    <AssemblyName>BuiltIn.Activities</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accessibility" />
+    <Reference Include="FlaUI.Core, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>...\packages\FlaUI.Core.3.2.0\lib\net45\FlaUI.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FlaUI.UIA3, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>...\..\..\packages\FlaUI.UIA3.3.2.0\lib\net45\FlaUI.UIA3.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Interop.UIAutomationClient, Version=10.0.18362.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>...\packages\Interop.UIAutomationClient.10.18362.0\lib\net45\Interop.UIAutomationClient.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>...\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Activities" />
+    <Reference Include="System.Activities.Presentation" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\SharedResources.cs" />
+    <Compile Include="RelayCommand.cs" />
+    <Compile Include="ResFinder.cs" />
+    <Compile Include="Resources\ResFinder.cs" />
+    <Compile Include="Resources\strings.Designer.cs" />
+    <Compile Include="ViewModels\CommentOut.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icons8-open-file-folder-32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\RPA.Workbench.Interfaces\RPA.Workbench.Interfaces.csproj">
+      <Project>{2ab6b58b-4943-43dd-a28a-1046f32f36e6}</Project>
+      <Name>RPA.Workbench.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\UiAutomation.Activities\RPAWorkbench.UiAutomation.Activities.Design\RPAWorkbench.UiAutomation.Activities.Design.csproj">
+      <Project>{ffde0b5e-efbe-473d-b8c8-2caadde5fe0e}</Project>
+      <Name>RPAWorkbench.UiAutomation.Activities.Design</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BuiltIn.Activities.Design\BuiltIn.Activities.Design.csproj">
+      <Project>{270c4476-2ece-45dd-8739-69f539b1c7dd}</Project>
+      <Name>BuiltIn.Activities.Design</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Buttons\Bridge.png" />
+    <Resource Include="Resources\Buttons\Button.png" />
+    <Resource Include="Resources\Buttons\CheckUpdates.png" />
+    <Resource Include="Resources\Buttons\Clear.png" />
+    <Resource Include="Resources\Buttons\CloseWebdriver.png" />
+    <Resource Include="Resources\Buttons\Copy.png" />
+    <Resource Include="Resources\Buttons\Copy_mono.png" />
+    <Resource Include="Resources\Buttons\Cut.png" />
+    <Resource Include="Resources\Buttons\Cut_mono.png" />
+    <Resource Include="Resources\Buttons\Delete.png" />
+    <Resource Include="Resources\Buttons\Delete_2.png" />
+    <Resource Include="Resources\Buttons\Delete_color.png" />
+    <Resource Include="Resources\Buttons\edge.png" />
+    <Resource Include="Resources\Buttons\Export.png" />
+    <Resource Include="Resources\Buttons\GetHTMLText.png" />
+    <Resource Include="Resources\Buttons\ImageClick.png" />
+    <Resource Include="Resources\Buttons\Import.png" />
+    <Resource Include="Resources\Buttons\Manage.png" />
+    <Resource Include="Resources\Buttons\Manage_mono.png" />
+    <Resource Include="Resources\Buttons\Mouse.png" />
+    <Resource Include="Resources\Buttons\New.png" />
+    <Resource Include="Resources\Buttons\OCR.png" />
+    <Resource Include="Resources\Buttons\Open.png" />
+    <Resource Include="Resources\Buttons\OpenBrowser.png" />
+    <Resource Include="Resources\Buttons\OpenChrome.png" />
+    <Resource Include="Resources\Buttons\OpenFirefox.png" />
+    <Resource Include="Resources\Buttons\OpenIE.png" />
+    <Resource Include="Resources\Buttons\Open_mono.png" />
+    <Resource Include="Resources\Buttons\Package.png" />
+    <Resource Include="icons8-folder-16.png" />
+    <Content Include="Resources\Buttons\Package.svg" />
+    <Resource Include="Resources\Buttons\Paste.png" />
+    <Resource Include="Resources\Buttons\Paste_mono.png" />
+    <Resource Include="Resources\Buttons\picture_in_picture.png" />
+    <Resource Include="Resources\Buttons\Play.png" />
+    <Resource Include="Resources\Buttons\ReadExcel.png" />
+    <Resource Include="Resources\Buttons\Record.png" />
+    <Resource Include="Resources\Buttons\Redo.png" />
+    <Resource Include="Resources\Buttons\Revert.png" />
+    <Resource Include="Resources\Buttons\RunBridge.png" />
+    <Resource Include="Resources\Buttons\Save.png" />
+    <Resource Include="Resources\Buttons\Signout.png" />
+    <Resource Include="Resources\Buttons\Stop.png" />
+    <Resource Include="Resources\Buttons\switch_216215.png" />
+    <Content Include="Resources\Buttons\switch_216215.svg" />
+    <Resource Include="Resources\Buttons\TypeText_1.png" />
+    <Resource Include="Resources\Buttons\Undo.png" />
+    <Resource Include="Resources\Buttons\URL.png" />
+    <Resource Include="Resources\Buttons\Zeniverse_ikon.png" />
+    <Resource Include="Resources\Buttons\zeniverse_ikon_84Z_icon.ico" />
+    <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\designer\addentitypermission.png" />
+    <Resource Include="Resources\designer\ballon.png" />
+    <Resource Include="Resources\designer\break.png" />
+    <Resource Include="Resources\designer\breakpoint.png" />
+    <Resource Include="Resources\designer\comment.png" />
+    <Resource Include="Resources\designer\commentout.png" />
+    <Resource Include="Resources\designer\continue.png" />
+    <Resource Include="Resources\designer\copyclipboard.png" />
+    <Resource Include="Resources\designer\deleteentity.png" />
+    <Resource Include="Resources\designer\detector.png" />
+    <Resource Include="Resources\designer\downloadfile.png" />
+    <Resource Include="Resources\designer\elementclick.png" />
+    <Resource Include="Resources\designer\elementtext.png" />
+    <Resource Include="Resources\designer\entity.png" />
+    <Resource Include="Resources\designer\findimage.png" />
+    <Resource Include="Resources\designer\focuselement.png" />
+    <Resource Include="Resources\designer\foreach.png" />
+    <Resource Include="Resources\designer\foreachhtml.png" />
+    <Resource Include="Resources\designer\foreachimage.png" />
+    <Resource Include="Resources\designer\foreachjava.png" />
+    <Resource Include="Resources\designer\foreachui.png" />
+    <Resource Include="Resources\designer\getapp.png" />
+    <Resource Include="Resources\designer\getentities.png" />
+    <Resource Include="Resources\designer\getentity.png" />
+    <Resource Include="Resources\designer\gethtmlelement.png" />
+    <Resource Include="Resources\designer\getimage.png" />
+    <Resource Include="Resources\designer\getjavaelement.png" />
+    <Resource Include="Resources\designer\getuielement.png" />
+    <Resource Include="Resources\designer\geturl.png" />
+    <Resource Include="Resources\designer\highlight.png" />
+    <Resource Include="Resources\designer\insertclipboard.png" />
+    <Resource Include="Resources\designer\invokebrowserscript.png" />
+    <Resource Include="Resources\designer\invokerpaworkflow.png" />
+    <Resource Include="Resources\designer\invokezeniverseworkflow.png" />
+    <Resource Include="Resources\designer\keyboard.png" />
+    <Resource Include="Resources\designer\killapp.png" />
+    <Resource Include="Resources\designer\log.png" />
+    <Resource Include="Resources\designer\messagebox.png" />
+    <Resource Include="Resources\designer\mouse.png" />
+    <Resource Include="Resources\designer\openurl.png" />
+    <Resource Include="Resources\designer\prompt.png" />
+    <Resource Include="Resources\designer\readexcel.png" />
+    <Resource Include="Resources\designer\readfile.png" />
+    <Resource Include="Resources\designer\readpdf.png" />
+    <Resource Include="Resources\designer\sleep.png" />
+    <Resource Include="Resources\designer\typetext.png" />
+    <Resource Include="Resources\designer\uiscraping.png" />
+    <Resource Include="Resources\designer\webscraping.png" />
+    <Resource Include="Resources\designer\writeexcel.png" />
+    <Resource Include="Resources\designer\writefile.png" />
+    <Resource Include="Resources\gears-1236578_1920.jpg" />
+    <Resource Include="Resources\icons\activity.png" />
+    <Content Include="Resources\icons\activity.svg" />
+    <Resource Include="Resources\icons\flowchart.png" />
+    <Resource Include="Resources\icons\openin.png" />
+    <Resource Include="Resources\icons\property.png" />
+    <Resource Include="Resources\icons\variable.png" />
+    <Resource Include="Resources\open.png" />
+    <Resource Include="Resources\open_flow.ico" />
+    <Resource Include="Resources\open_flow_org.ico" />
+    <Resource Include="Resources\open_rpa.ico" />
+    <Resource Include="Resources\open_rpa128.png" />
+    <Resource Include="Resources\open_rpa512.png" />
+    <Resource Include="Resources\open_rpa_white.png" />
+    <Resource Include="Resources\Selector\Button.png" />
+    <Resource Include="Resources\Selector\Calendar.png" />
+    <Resource Include="Resources\Selector\CheckBox.png" />
+    <Resource Include="Resources\Selector\ComboBox.png" />
+    <Resource Include="Resources\Selector\Custom.png" />
+    <Resource Include="Resources\Selector\DataGrid.png" />
+    <Resource Include="Resources\Selector\Document.png" />
+    <Resource Include="Resources\Selector\Edit.png" />
+    <Resource Include="Resources\Selector\Group.png" />
+    <Resource Include="Resources\Selector\Header.png" />
+    <Resource Include="Resources\Selector\HeaderItem.png" />
+    <Resource Include="Resources\Selector\HyperLink.png" />
+    <Resource Include="Resources\Selector\Image.png" />
+    <Resource Include="Resources\Selector\Item.png" />
+    <Resource Include="Resources\Selector\List.png" />
+    <Resource Include="Resources\Selector\Menu.png" />
+    <Resource Include="Resources\Selector\MenuItem.png" />
+    <Resource Include="Resources\Selector\Pane.png" />
+    <Resource Include="Resources\Selector\ProgressBar.png" />
+    <Resource Include="Resources\Selector\RadioButton.png" />
+    <Resource Include="Resources\Selector\ScrollBar.png" />
+    <Resource Include="Resources\Selector\Slider.png" />
+    <Resource Include="Resources\Selector\Spinner.png" />
+    <Resource Include="Resources\Selector\SplitButton.png" />
+    <Resource Include="Resources\Selector\StatusBar.png" />
+    <Resource Include="Resources\Selector\Tab.png" />
+    <Resource Include="Resources\Selector\Text.png" />
+    <Resource Include="Resources\Selector\Thumb.png" />
+    <Resource Include="Resources\Selector\TitleBar.png" />
+    <Resource Include="Resources\Selector\ToolBar.png" />
+    <Resource Include="Resources\Selector\ToolTip.png" />
+    <Resource Include="Resources\Selector\Tree.png" />
+    <Resource Include="Resources\Selector\Window.png" />
+    <Resource Include="Resources\state\Abort.png" />
+    <Resource Include="Resources\state\Completed.png" />
+    <Resource Include="Resources\state\failed.png" />
+    <Resource Include="Resources\state\Running.png" />
+    <Resource Include="Resources\state\Running_green.png" />
+    <Resource Include="Resources\state\unloaded.png" />
+    <Resource Include="Resources\toolbox\addentitypermission.png" />
+    <Resource Include="Resources\toolbox\ballon.png" />
+    <Resource Include="Resources\toolbox\break.png" />
+    <Resource Include="Resources\toolbox\breakpoint.png" />
+    <Resource Include="Resources\toolbox\comment.png" />
+    <Resource Include="Resources\toolbox\commentout.png" />
+    <Resource Include="Resources\toolbox\continue.png" />
+    <Resource Include="Resources\toolbox\copyclipboard.png" />
+    <Resource Include="Resources\toolbox\deleteentity.png" />
+    <Resource Include="Resources\toolbox\detector.png" />
+    <Resource Include="Resources\toolbox\detector2.png" />
+    <Resource Include="Resources\toolbox\downloadfile.png" />
+    <Resource Include="Resources\toolbox\elementclick.png" />
+    <Resource Include="Resources\toolbox\elementtext.png" />
+    <Resource Include="Resources\toolbox\entity.png" />
+    <Resource Include="Resources\toolbox\findimage.png" />
+    <Resource Include="Resources\toolbox\focuselement.png" />
+    <Resource Include="Resources\toolbox\foreach.png" />
+    <Resource Include="Resources\toolbox\foreachhtml.png" />
+    <Resource Include="Resources\toolbox\foreachimage.png" />
+    <Resource Include="Resources\toolbox\foreachjava.png" />
+    <Resource Include="Resources\toolbox\foreachui.png" />
+    <Resource Include="Resources\toolbox\getapp.png" />
+    <Resource Include="Resources\toolbox\getentities.png" />
+    <Resource Include="Resources\toolbox\getentity.png" />
+    <Resource Include="Resources\toolbox\gethtmlelement.png" />
+    <Resource Include="Resources\toolbox\getimage.png" />
+    <Resource Include="Resources\toolbox\getjavaelement.png" />
+    <Resource Include="Resources\toolbox\getuielement.png" />
+    <Resource Include="Resources\toolbox\geturl.png" />
+    <Resource Include="Resources\toolbox\highlight.png" />
+    <Resource Include="Resources\toolbox\insertclipboard.png" />
+    <Resource Include="Resources\toolbox\invokebrowserscript.png" />
+    <Resource Include="Resources\toolbox\invokerpaworkflow.png" />
+    <Resource Include="Resources\toolbox\invokezeniverseworkflow.png" />
+    <Resource Include="Resources\toolbox\keyboard.png" />
+    <Resource Include="Resources\toolbox\killapp.png" />
+    <Resource Include="Resources\toolbox\log.png" />
+    <Resource Include="Resources\toolbox\messagebox.png" />
+    <Resource Include="Resources\toolbox\mouse.png" />
+    <Resource Include="Resources\toolbox\openurl.png" />
+    <Resource Include="Resources\toolbox\prompt.png" />
+    <Resource Include="Resources\toolbox\readexcel.png" />
+    <Resource Include="Resources\toolbox\readfile.png" />
+    <Resource Include="Resources\toolbox\readpdf.png" />
+    <Resource Include="Resources\toolbox\sleep.png" />
+    <Resource Include="Resources\toolbox\typetext.png" />
+    <Resource Include="Resources\toolbox\uiscraping.png" />
+    <Resource Include="Resources\toolbox\webscraping.png" />
+    <Resource Include="Resources\toolbox\workflow.png" />
+    <Resource Include="Resources\toolbox\writeexcel.png" />
+    <Resource Include="Resources\toolbox\writefile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\RecorderPlugins.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\WorkflowInstances.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\strings.ru.resx">
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\strings.ro.resx">
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\strings.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\strings.da.resx">
+      <Generator>
+      </Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\strings.da.resx" />
+    <EmbeddedResource Include="Resources\strings.de.resx" />
+    <EmbeddedResource Include="Resources\strings.es.resx" />
+    <EmbeddedResource Include="Resources\strings.ja.resx" />
+    <EmbeddedResource Include="Resources\strings.pt.resx" />
+    <EmbeddedResource Include="Resources\strings.resx" />
+    <EmbeddedResource Include="Resources\strings.ro.resx" />
+    <EmbeddedResource Include="Resources\strings.ru.resx" />
+    <EmbeddedResource Include="Resources\strings.zh.resx" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

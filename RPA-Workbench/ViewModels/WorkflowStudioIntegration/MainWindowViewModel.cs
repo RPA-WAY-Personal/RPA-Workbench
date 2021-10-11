@@ -1,25 +1,4 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="MainWindowViewModel.cs" company="Microsoft Corporation">
-// Copyright (c) Microsoft Corporation. All rights reserved.
-// THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, 
-// INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
-// Third Party Code: This file is based on or incorporates material from the projects listed below (collectively, “Third Party Code”).
-// Microsoft is not the original author of the Third Party Code. The original copyright notice, as well as the license under which 
-// Microsoft received such Third Party Code, are set forth below. Such licenses and notices are provided for informational purposes only.
-// Microsoft, not the third party, licenses the Third Party Code to you under the terms set forth in the EULA for AvalonDock.
-// Unless applicable law gives you more rights, Microsoft reserves all other rights not expressly granted under this agreement,
-// whether by implication, estoppel or otherwise.  
-//
-// AvalonDock project, available at http://avalondock.codeplex.com. Copyright (c) 2007-2009, Adolfo Marinucci. All rights reserved.
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-// INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-// IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, 
-// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
-// OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// </copyright>
-//-----------------------------------------------------------------------
-namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
+﻿namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
 {
     using System;
     using System.Activities;
@@ -51,6 +30,10 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
     using System.IO;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using System.Activities.Presentation.View;
+    using System.Linq;
+    using RPA.Workbench.Interfaces;
+    using System.Activities.Expressions;
 
     public class MainWindowViewModel : ViewModelBase
     {
@@ -91,6 +74,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         private ICommand _RunProjectFromJson;
         private ICommand _OpenBackstage;
         private ICommand _OpenSettingsTab;
+        private ICommand _ShowUiExplorerFromRibbon;
         private TabbedMdiHost tabsPane;
         private IDictionary<ContentTypes, DocumentWindow> dockableContents;
         private ToolboxControl toolboxControl;
@@ -112,10 +96,23 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         ToolWindow _OutputToolWindow;
         ToolWindow _ErrorsToolWindow;
         ToolWindow _DebugToolWindow;
+
+
+        private MenuItem comment;
+        private MenuItem uncomment;
+        public ModelItem SelectedActivity { get; private set; }
+        private Selection selection = null;
+
+
+
         public MainWindowViewModel(ToolWindow PropertiesToolwindow, ToolWindow OutlineToolWindow, ToolWindow OutputToolWindow, ToolWindow ErrorsToolWindow,
              ToolWindow DebugToolWindow, DockSite dockingManager = null, TabbedMdiHost tabsPane = null, ToolWindow DebuggerWindow = null,  MainWindow mainWindow = null,
             Views.BackstageMenu backstageMenu = null, String CurrentProjectPath = null)
         {
+            var metaData = new DesignerMetadata();
+            metaData.Register();
+            RPAWorkbench.UiAutomation.Activities.TestAutomationMetadata.RegisterAll();
+
             this.CurrentProjectPath = CurrentProjectPath;
 
             this.dockingManager = dockingManager;
@@ -125,6 +122,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             {
                 this.UpdateViews();
             };
+
             this._PropertiesToolWindow = PropertiesToolwindow;
             this._OutlineToolWindow = OutlineToolWindow;
             this._OutputToolWindow = OutputToolWindow;
@@ -170,6 +168,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             CloseProjectCommand = new RelayCommand(new Action<object>(CloseProject));
             RunProjectFromJsonCommand = new RelayCommand(new Action<object>(StartWithoutDebuggingFromJson));
             OpenBackstageCommand = new RelayCommand(new Action<object>(StartWithoutDebuggingFromJson));
+            ShowUiExplorerFromRibbonCommand = new RelayCommand(new Action<object>(ShowUiExplorerFromRibbon));
         }
 
         void LoadBackstageTabs()
@@ -229,7 +228,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                         jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
                         string ProjectCurrentDirectory = jsonObj["ProjectPath"];
                         model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"];
-                        model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
+                        model.WorkflowDesigner.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
                         if (model != null)
                         {
                             this.ViewOutput();
@@ -266,7 +265,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                         jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
                         string ProjectCurrentDirectory = jsonObj["ProjectPath"];
                         model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"];
-                        model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
+                        model.WorkflowDesigner.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
                         if (model != null)
                         {
                             this.ViewErrors();
@@ -307,6 +306,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 WorkflowViewModel model = this.ActiveWorkflowViewModel;
                 if (model != null)
                 {
+                    model.outputTextBox.Items.Clear();
                     Console.SetOut(model.Output);
                     return model.OutputView;
                 }
@@ -318,11 +318,12 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                         string json;
                         dynamic jsonObj;
                         model = new WorkflowViewModel(false);
+                        model.outputTextBox.Items.Clear();
                         json = File.ReadAllText(CurrentProjectPath + "\\project.json");
                         jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
                         string ProjectCurrentDirectory = jsonObj["ProjectPath"];
                         model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"];
-                        model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
+                        model.WorkflowDesigner.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
                         if (model != null)
                         {
                             this.ViewOutput();
@@ -352,7 +353,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             get
             {
                 WorkflowViewModel model = this.ActiveWorkflowViewModel;
-                return model == null ? null : model.Designer.PropertyInspectorView;
+                return model == null ? null : model.WorkflowDesigner.PropertyInspectorView;
             }
         }
         public ToolboxControl ActivitiesView
@@ -404,6 +405,13 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
         {
             get { return _OpenSettingsTab; }
             set { _OpenSettingsTab = value; }
+        }
+
+        public ICommand ShowUiExplorerFromRibbonCommand
+        {
+            //CHECK GETELEMENT DESIGNER
+            get { return _ShowUiExplorerFromRibbon; }
+            set { _ShowUiExplorerFromRibbon = value; }
         }
 
         #endregion
@@ -935,12 +943,12 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             // model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"] + ".xaml";
             //  model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"] + ".xaml");
             model.FullFilePath = ProjectCurrentDirectory + "\\" + jsonObj["Main"];
-            model.Designer.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
+            model.WorkflowDesigner.Load(ProjectCurrentDirectory + "\\" + jsonObj["Main"]);
             if (model != null)
             {
                 if (this.HasValidationErrors)
                 {
-                    Console.WriteLine($"There was an error in '{jsonObj["Main"]}', can't run");
+                    Console.WriteLine($"Error : There was an error in '{jsonObj["Main"]}', can't run");
                     this.ViewErrors();
                     this.SetSelectedTab(ContentTypes.Errors);
                 }
@@ -949,7 +957,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                     if (RPA_Workbench.Properties.Settings.Default.Setting_MinimizeOnRun == true)
                     {
                         mainWindowLocal.WindowState = WindowState.Minimized;
-                        model.RunWorkflow();
+                        model.RunWorkflow(mainWindowLocal);
                     }
                     else
                     {
@@ -961,10 +969,26 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 // model.RunWorkflow();
             }
         }
-
-        private void OpenBackstage(object parameter)
+        System.Activities.Presentation.WorkflowViewElement WorkflowViewElement = new WorkflowViewElement();
+        private void ShowUiExplorerFromRibbon(object parameter)
         {
-            
+            //RPA.Workbench.Interfaces.Selector.SelectorWindow selectorWindow = new RPA.Workbench.Interfaces.Selector.SelectorWindow("s",1);
+            //selectorWindow.Show();
+           
+            //string SelectorString = WorkflowViewElement.ModelItem.GetValue<string>("Selector");
+            //int maxresult = 1;
+
+            //if (string.IsNullOrEmpty(SelectorString)) SelectorString = "[{Selector: 'Windows'}]";
+            //var selector = new RPA.Workbench.Interfaces.Selector.Selector(SelectorString);
+            //var pluginname = selector.First().Selector;
+            //var selectors = new RPA.Workbench.Interfaces.Selector.SelectorWindow(pluginname, selector, maxresult);
+            //selectors.Owner = RPA.Workbench.Interfaces.GenericTools.MainWindow;
+            //if (selectors.ShowDialog() == true)
+            //{
+            //    WorkflowViewElement.ModelItem.Properties["Selector"].SetValue(new InArgument<string>() { Expression = new Literal<string>(selectors.vm.json) });
+            //}
+
+            //TODO: Show Ui Explror when in MainWindow (ViewModel)
         }
         #endregion
 
@@ -995,8 +1019,9 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             workspaceViewModel.FullFilePath = Filename;
             content = new WorkflowDocumentContent(workspaceViewModel);
 
-            designer = workspaceViewModel.Designer;
-            ModelService modelService = workspaceViewModel.Designer.Context.Services.GetService<ModelService>();
+            designer = workspaceViewModel.WorkflowDesigner;
+
+            ModelService modelService = workspaceViewModel.WorkflowDesigner.Context.Services.GetService<ModelService>();
             if (modelService != null)
             {
                 List<Type> referencedActivities = this.GetReferencedActivities(modelService);
@@ -1007,7 +1032,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             dockingManager.DocumentWindows.Add(content);
             content.Activate();
             content.KeyDown += DockingManager_KeyDown;
-
+            SetupDesignerCustomContextMenuItems();
 
 
             //  dockingManager.ActiveWindow.Content = content;
@@ -1021,7 +1046,401 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
             //    this.SetSelectedTab(ContentTypes.Errors);
             //}
         }
+        private string SelectedVariableName = null;
+        private void SetupDesignerCustomContextMenuItems()
+        {
+            designer.Context.Items.Subscribe(new SubscribeContextCallback<Selection>(SelectionChanged));
+            comment = new MenuItem() { Header = "Comment" };
+            uncomment = new MenuItem() { Header = "Uncomment" };
 
+            comment.Click += OnComment;
+            uncomment.Click += OnUncomment;
+
+            designer.ContextMenu.Items.Add(comment);
+            designer.ContextMenu.Items.Add(uncomment);
+        }
+
+        public void OnUncomment(object sender, RoutedEventArgs e)
+        {
+            var thisselection = selection;
+            var comment = SelectedActivity;
+            var currentSequence = SelectedActivity.Properties["Body"].Value;
+            if (currentSequence == null) return;
+            //var newSequence = GetActivitiesScope(SelectedActivity.Parent.Parent);
+            var newSequence = GetActivitiesScope(SelectedActivity.Parent, designer);
+            ModelItemCollection currentActivities = null;
+            if (currentSequence.Properties["Activities"] != null)
+            {
+                currentActivities = currentSequence.Properties["Activities"].Collection;
+            }
+            else if (currentSequence.Properties["Nodes"] != null)
+            {
+                currentActivities = currentSequence.Properties["Nodes"].Collection;
+            }
+            ModelItemCollection newActivities = null;
+            if (newSequence.Properties["Activities"] != null)
+            {
+                newActivities = newSequence.Properties["Activities"].Collection;
+            }
+            else if (newSequence.Properties["Nodes"] != null)
+            {
+                newActivities = newSequence.Properties["Nodes"].Collection;
+                var next = thisselection.PrimarySelection.Parent.Properties["Next"];
+
+                newActivities.Remove(thisselection.PrimarySelection.Parent);
+
+                FlowStep step = new FlowStep
+                {
+                    Action = new Sequence()
+                };
+                var newStep = newActivities.Add(step);
+                newStep.Properties["Action"].SetValue(comment.Properties["Body"].Value);
+                newStep.Properties["Next"].SetValue(next.Value);
+
+                if (newSequence.Properties["StartNode"].Value == thisselection.PrimarySelection.Parent)
+                {
+                    newSequence.Properties["StartNode"].SetValue(newStep);
+                }
+                foreach (var node in newActivities)
+                {
+                    if (node.Properties["Next"] != null && node.Properties["Next"].Value != null)
+                    {
+                        if (node.Properties["Next"].Value == thisselection.PrimarySelection.Parent)
+                        {
+                            node.Properties["Next"].SetValue(newStep);
+                        }
+                    }
+                }
+                return;
+            }
+
+            if (currentActivities != null && newActivities != null)
+            {
+                var index = newActivities.IndexOf(comment);
+                foreach (var sel in currentActivities.ToList())
+                {
+                    currentActivities.Remove(sel);
+                    index++;
+                    newActivities.Insert(index, sel);
+                    //newActivities.Add(sel);
+                }
+                newActivities.Remove(comment);
+            }
+            if (currentActivities != null && currentActivities.Count == 1 && comment.Parent.Properties["Handler"] != null)
+            {
+                var handler = comment.Parent.Properties["Handler"];
+                handler.SetValue(currentActivities.First());
+            }
+            else if (currentActivities == null && newActivities != null)
+            {
+                var index = newActivities.IndexOf(comment);
+                var movethis = comment.Properties["Body"].Value;
+                newActivities.Insert(index, movethis);
+                newActivities.Remove(comment);
+            }
+            else if (currentActivities == null && newActivities == null)
+            {
+                if (newSequence.Properties["Body"] != null)
+                {
+                    var body = newSequence.Properties["Body"];
+                    var handler = body.Value.Properties["Handler"];
+                    handler.SetValue(handler.Value.Properties["Body"].Value);
+                }
+                else if (newSequence.Properties["Handler"] != null)
+                {
+                    var handler = newSequence.Properties["Handler"];
+                    handler.SetValue(currentSequence);
+                }
+            }
+            else if (currentSequence != null && comment.Parent != null && comment.Parent.Properties["Handler"] != null)
+            {
+                var handler = comment.Parent.Properties["Handler"];
+                handler.SetValue(currentSequence);
+            }
+        }
+        private void OnComment(object sender, RoutedEventArgs e)
+        {
+            var thisselection = selection;
+            var pri = thisselection.PrimarySelection;
+            if (pri == null) return;
+            //var movethis = selectedActivity;
+
+            var lastSequence = GetActivitiesScope(SelectedActivity.Parent, designer);
+            if (lastSequence == null) lastSequence = GetActivitiesScope(SelectedActivity, designer);
+            ModelItemCollection Activities = null;
+            if (lastSequence.Properties["Activities"] != null)
+            {
+                Activities = lastSequence.Properties["Activities"].Collection;
+            }
+            else if (lastSequence.Properties["Nodes"] != null)
+            {
+                Activities = lastSequence.Properties["Nodes"].Collection;
+            }
+
+            if (SelectedActivity.ItemType == typeof(Sequence))
+            {
+
+                var parent = SelectedActivity.Parent;
+                if (SelectedActivity.Parent.ItemType == typeof(ActivityBuilder)) return;
+                if (parent.Properties["Activities"] != null)
+                {
+                    Activities = parent.Properties["Activities"].Collection;
+                }
+                var co = new BuiltIn.Activities.CommentOut
+                {
+                    Body = SelectedActivity.GetCurrentValue() as Activity
+                };
+                if (Activities == null)
+                {
+                    var item = thisselection.PrimarySelection.Parent.Properties["Handler"].SetValue(co);
+                }
+                else
+                {
+                    try
+                    {
+                        Activities.Remove(SelectedActivity);
+                        Activities.Add(co);
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+                   
+                }
+            }
+            else if (thisselection.SelectionCount > 1 || thisselection.PrimarySelection.ItemType == typeof(Sequence))
+            {
+                if (lastSequence.Properties["Nodes"] != null) return;
+                var co = new BuiltIn.Activities.CommentOut
+                {
+                    Body = new Sequence()
+                };
+                if (Activities == null)
+                {
+                    var item = thisselection.PrimarySelection.Parent.Properties["Handler"].SetValue(co);
+                    var newActivities = item.Properties["Body"].Value.Properties["Activities"].Collection;
+                    foreach (var sel in thisselection.SelectedObjects)
+                    {
+                        if (Activities != null) Activities.Remove(sel);
+                        var index = newActivities.Count;
+                        Log.Debug("insert at " + index);
+                        newActivities.Insert(0, sel);
+                        //newActivities.Add(sel);
+                    }
+                }
+                else
+                {
+                    AddActivity(co, designer);
+                    var newActivities = SelectedActivity.Properties["Body"].Value.Properties["Activities"].Collection;
+                    foreach (var sel in thisselection.SelectedObjects)
+                    {
+                        if (Activities != null) Activities.Remove(sel);
+                        var index = newActivities.Count;
+                        Log.Debug("insert at " + index);
+                        newActivities.Insert(0, sel);
+                        //newActivities.Add(sel);
+                    }
+                }
+
+            }
+            else
+            {
+                var parentparent = thisselection.PrimarySelection.Parent.Parent;
+                var parent = thisselection.PrimarySelection.Parent;
+
+                if (parentparent == lastSequence)
+                {
+                    var co = new BuiltIn.Activities.CommentOut();
+                    AddActivity(co, designer);
+                    Activities.Remove(thisselection.PrimarySelection);
+                    SelectedActivity.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                }
+                else
+                {
+                    try
+                    {
+                        if (parentparent.Properties["Body"] != null)
+                        {
+                            var body = parentparent.Properties["Body"];
+                            if (body.Value == null)
+                            {
+                                var aa = (dynamic)Activator.CreateInstance(body.PropertyType);
+                                //aa.Handler = new CommentOut();
+                                SelectedActivity = parentparent.Properties["Body"].SetValue(aa);
+                            }
+                            var handler = body.Value.Properties["Handler"];
+                            var comment = handler.SetValue(new BuiltIn.Activities.CommentOut());
+                            comment.Properties["Body"].SetValue(thisselection.PrimarySelection);
+
+                            //p.Properties["Body"].Value.Properties["Handler"].Value.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                        }
+                        else if (parent.Properties["Action"] != null)
+                        {
+                            var next = thisselection.PrimarySelection.Parent.Properties["Next"];
+                            var co = new BuiltIn.Activities.CommentOut();
+                            var comment = AddActivity(co, designer);
+                            Activities.Remove(thisselection.PrimarySelection.Parent);
+
+                            if (lastSequence.Properties["StartNode"].Value == thisselection.PrimarySelection.Parent)
+                            {
+                                lastSequence.Properties["StartNode"].SetValue(comment);
+                            }
+                            foreach (var node in Activities)
+                            {
+                                if (node.Properties["Next"] != null && node.Properties["Next"].Value != null)
+                                {
+                                    if (node.Properties["Next"].Value == thisselection.PrimarySelection.Parent)
+                                    {
+                                        node.Properties["Next"].SetValue(comment);
+                                    }
+                                }
+                            }
+
+
+                            if (comment.Properties["Body"] != null)
+                            {
+                                comment.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                            }
+                            else if (comment.Properties["Action"] != null)
+                            {
+                                comment.Properties["Action"].Value.Properties["Body"].SetValue(thisselection.PrimarySelection);
+                                comment.Properties["Next"].SetValue(next.Value);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    }
+                }
+            }
+        }
+        public ModelItem AddActivity(Activity a, WorkflowDesigner workflowDesigner)
+        {
+            ModelItem newItem = null;
+            ModelService modelService = workflowDesigner.Context.Services.GetService<ModelService>();
+            using (ModelEditingScope editingScope = modelService.Root.BeginEdit("Implementation"))
+            {
+                var lastSequence = GetSequence(SelectedActivity, designer);
+                if (lastSequence == null && SelectedActivity != null) lastSequence = GetActivitiesScope(SelectedActivity.Parent, designer);
+                if (lastSequence != null)
+                {
+                    ModelItemCollection Activities = null;
+                    if (lastSequence.Properties["Activities"] != null)
+                    {
+                        Activities = lastSequence.Properties["Activities"].Collection;
+                    }
+                    else
+                    {
+                        Activities = lastSequence.Properties["Nodes"].Collection;
+                    }
+
+                    var insertAt = Activities.Count;
+                    for (var i = 0; i < Activities.Count; i++)
+                    {
+                        if (Activities[i].Equals(SelectedActivity))
+                        {
+                            insertAt = (i + 1);
+                        }
+                    }
+                    if (lastSequence.Properties["Activities"] != null)
+                    {
+                        if (string.IsNullOrEmpty(a.DisplayName)) a.DisplayName = "Activity";
+                        newItem = Activities.Insert(insertAt, a);
+                    }
+                    else
+                    {
+                        FlowStep step = new FlowStep
+                        {
+                            Action = a
+                        };
+                        newItem = Activities.Insert(insertAt, step);
+                    }
+                    //Selection.Select(wfDesigner.Context, selectedActivity);
+                    //ModelItemExtensions.Focus(selectedActivity);
+                }
+                editingScope.Complete();
+                //WorkflowInspectionServices.CacheMetadata(a);
+            }
+            if (newItem != null)
+            {
+                SelectedActivity = newItem;
+                newItem.Focus(20);
+                Selection.SelectOnly(workflowDesigner.Context, newItem);
+            }
+            return newItem;
+        }
+        private ModelItem GetSequence(ModelItem from, WorkflowDesigner workflowDesigner)
+        {
+            ModelItem parent = from;
+            while (parent != null && !parent.ItemType.Equals(typeof(Sequence)))
+            {
+                parent = parent.Parent;
+            }
+            return parent;
+        }
+        private ModelItem GetVariableScope(ModelItem from, WorkflowDesigner workflowDesigner)
+        {
+            ModelItem parent = from;
+
+            while (parent != null && parent.Properties["Variables"] == null)
+            {
+                parent = parent.Parent;
+            }
+            return parent;
+        }
+        private ModelItem GetActivitiesScope(ModelItem from, WorkflowDesigner workflowDesigner)
+        {
+            ModelItem parent = from;
+
+            while (parent != null && parent.Properties["Activities"] == null && parent.Properties["Handler"] == null && parent.Properties["Nodes"] == null)
+            {
+                parent = parent.Parent;
+            }
+            return parent;
+        }
+        private void SelectionChanged(Selection item)
+        {
+            selection = item;
+            SelectedActivity = selection.PrimarySelection;
+            if (SelectedActivity == null) return;
+            SelectedVariableName = SelectedActivity.GetCurrentValue().ToString();
+
+            try
+            {
+                if (designer.ContextMenu.Items.Contains(comment)) designer.ContextMenu.Items.Remove(comment);
+                if (designer.ContextMenu.Items.Contains(uncomment)) designer.ContextMenu.Items.Remove(uncomment);
+                var lastSequence = GetActivitiesScope(SelectedActivity.Parent, designer);
+                if (lastSequence == null) lastSequence = GetActivitiesScope(SelectedActivity, designer);
+                if (lastSequence == null) return;
+                if (SelectedActivity.ItemType == typeof(BuiltIn.Activities.CommentOut))
+                {
+                    designer.ContextMenu.Items.Add(uncomment);
+                }
+                else if (lastSequence.ItemType != typeof(Flowchart))
+                {
+                    if (selection.SelectionCount > 1)
+                    {
+                        if (lastSequence.Properties["Nodes"] == null)
+                        {
+                            designer.ContextMenu.Items.Add(comment);
+                        }
+                    }
+                    else
+                    {
+                        designer.ContextMenu.Items.Add(comment);
+                    }
+                }
+                else if (lastSequence.ItemType != typeof(Flowchart))
+                {
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.ToString());
+            }
+        }
         private void DockingManager_PrimaryDocumentChanged(object sender, DockingWindowEventArgs e)
         {
             //try
@@ -1187,7 +1606,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                     if (RPA_Workbench.Properties.Settings.Default.Setting_MinimizeOnRun == true)
                     {
                         mainWindowLocal.WindowState = WindowState.Minimized;
-                        model.RunWorkflow();
+                        model.RunWorkflow(mainWindowLocal);
                     }
                     else
                     {
@@ -1368,6 +1787,13 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                     typeof(FlowDecision),
                     typeof(FlowSwitch<>)
                 });
+
+            this.AddCategoryToToolbox(
+              "Test",
+               new List<Type>
+               {
+                    typeof(RPAWorkbench.UiAutomation.Activities.TestAutomationDesigner),
+               });
 
             //this.AddCategoryToToolbox(
             //    Resources.MessagingCategoryToToolbox,

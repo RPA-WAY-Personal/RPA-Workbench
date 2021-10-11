@@ -22,7 +22,7 @@ namespace RPA_Workbench.Utilities
     using RibbonControls = ActiproSoftware.Windows.Controls.Ribbon.Controls;
     public class TextBoxStreamWriter : TextWriter
     {
-        private TreeListBox output;
+        public TreeListBox output;
         private TraceSource traceSource;
         private TraceSource allTraceSource;
         private string workflowName;
@@ -30,6 +30,7 @@ namespace RPA_Workbench.Utilities
 
         public TextBoxStreamWriter(TreeListBox output, string workflowName)
         {
+            output.Items.Clear();
             output.TopLevelIndent = -1;
             this.output = output;
             this.output.TopLevelIndent = -1;

@@ -81,12 +81,22 @@
     <Reference Include="ActiproSoftware.Shell.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
     <Reference Include="ActiproSoftware.Views.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
     <Reference Include="ActiproSoftware.Wizard.Wpf, Version=21.1.2.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="DotNetProjects.Input.Toolkit, Version=6.0.90.0, Culture=neutral, PublicKeyToken=79778c5f2eed289b, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetProjects.WpfToolkit.Input.6.0.90\lib\net40\DotNetProjects.Input.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetProjects.Wpf.Extended.Toolkit, Version=4.6.97.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetProjects.Extended.Wpf.Toolkit.4.6.97\lib\net40\DotNetProjects.Wpf.Extended.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=6.1.2.30, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.6.1.2.30\lib\net45\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="Meziantou.Framework.FullPath, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Meziantou.Framework.FullPath.1.0.7\lib\net472\Meziantou.Framework.FullPath.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.5.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -112,6 +122,8 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.DurableInstancing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Activities" />
     <Reference Include="System.Text.Encodings.Web, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -170,6 +182,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\CommandLineParser.cs" />
+    <Compile Include="Utilities\DelegateCommand.cs" />
     <Compile Include="Utilities\DispatcherService.cs" />
     <Compile Include="Utilities\ExceptionHelper.cs" />
     <Compile Include="Utilities\JsonControls.cs" />
@@ -233,6 +247,36 @@
     <Compile Include="Views\ValidationErrorsUserControl.xaml.cs">
       <DependentUpon>ValidationErrorsUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\WFDesigner\ChildEnum.cs" />
+    <Compile Include="Views\WFDesigner\Extensions.cs" />
+    <Compile Include="Views\WFDesigner\LevelConverter.cs" />
+    <Compile Include="Views\WFDesigner\Project.cs" />
+    <Compile Include="Views\WFDesigner\RobotInstance.cs" />
+    <Compile Include="Views\WFDesigner\SelectorWindowTESTRUWE.cs" />
+    <Compile Include="Views\WFDesigner\showVariables.xaml.cs">
+      <DependentUpon>showVariables.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WFDesigner\Store\AsyncResult.cs" />
+    <Compile Include="Views\WFDesigner\Store\CompletedAsyncResult.cs" />
+    <Compile Include="Views\WFDesigner\Store\JsonInstanceStoreBase.cs" />
+    <Compile Include="Views\WFDesigner\Store\OpenFlowInstanceStore.cs" />
+    <Compile Include="Views\WFDesigner\Store\xmlInstanceStoreBase.cs" />
+    <Compile Include="Views\WFDesigner\variable.cs" />
+    <Compile Include="Views\WFDesigner\VisibilityConverter.cs" />
+    <Compile Include="Views\WFDesigner\WFDesigner.xaml.cs">
+      <DependentUpon>WFDesigner.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WFDesigner\Workflow.cs" />
+    <Compile Include="Views\WFDesigner\WorkflowInstance.cs" />
+    <Compile Include="Views\WFDesigner\WorkflowTrackingParticipant.cs" />
+    <Page Include="Views\WFDesigner\showVariables.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\WFDesigner\WFDesigner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <XamlAppDef Include="defaultWorkflow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -338,13 +382,37 @@
     <Resource Include="1. Resources\RPA-WAY Images\RPA Workbench Splash Centered.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Activities\Built-In.Activities\BuiltIn.Activities\BuiltIn.Activities.csproj">
+      <Project>{b4b8607a-01e6-4391-8201-c79e26b62a03}</Project>
+      <Name>BuiltIn.Activities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Activities\UiAutomation.Activities\RPAWorkbench.UiAutomation.Activities.Design\RPAWorkbench.UiAutomation.Activities.Design.csproj">
+      <Project>{ffde0b5e-efbe-473d-b8c8-2caadde5fe0e}</Project>
+      <Name>RPAWorkbench.UiAutomation.Activities.Design</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CustomControls\CustomControls.csproj">
       <Project>{e8790de0-3742-4755-bd92-91a2729eb0ca}</Project>
       <Name>CustomControls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OpenRPA.Windows\RPA.Workbench.Windows.csproj">
+      <Project>{c2ed7a5c-e60f-4006-ab36-bf77f8984aaa}</Project>
+      <Name>RPA.Workbench.Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RPA.Workbench.AutomationEngine\RPA.Workbench.AutomationEngine.csproj">
       <Project>{834bb495-6824-4ca2-92e2-ceb1967fac2f}</Project>
       <Name>RPA.Workbench.AutomationEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RPA.Workbench.CodeEditor\RPA.Workbench.CodeEditor.csproj">
+      <Project>{F35A451F-220C-4B75-A4B1-1B50D0BFBBD6}</Project>
+      <Name>RPA.Workbench.CodeEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RPA.Workbench.Interfaces\RPA.Workbench.Interfaces.csproj">
+      <Project>{2ab6b58b-4943-43dd-a28a-1046f32f36e6}</Project>
+      <Name>RPA.Workbench.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RPA.Workbench.Net\RPA.Workbench.Net.csproj">
+      <Project>{aa51dde2-4c00-4d47-a2e9-49bf41b300d2}</Project>
+      <Name>RPA.Workbench.Net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -438,6 +506,13 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="1. Resources\RPA-WAY Images\Workbench Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1. Resources\MainWindow Images\Top Ribbon Images\UiExplorer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="1. Resources\Variables Window Images\close.png" />
+    <Resource Include="1. Resources\Variables Window Images\open.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

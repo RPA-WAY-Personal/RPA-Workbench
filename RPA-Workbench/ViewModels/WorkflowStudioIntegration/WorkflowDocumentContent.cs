@@ -66,7 +66,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 this.defaultWorkflowService = defaultWorkflowServiceValue;
             }
 
-            WorkflowDesigner designer = model.Designer;
+            WorkflowDesigner designer = model.WorkflowDesigner;
 
             try
             {
@@ -92,7 +92,7 @@ namespace RPA_Workbench.ViewModels.WorkflowStudioIntegration
                 MessageBox.Show(string.Format(Properties.Resources.ErrorLoadingDialogMessage, ExceptionHelper.FormatStackTrace(e)), Properties.Resources.ErrorLoadingDialogTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             }
                 
-            this.Content = model.Designer.View;
+            this.Content = model.WorkflowDesigner.View;
 
             model.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler(this.Model_PropertyChanged);
         }

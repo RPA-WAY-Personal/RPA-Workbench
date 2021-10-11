@@ -87,12 +87,15 @@ namespace RPA.Workbench.AutomationEngine.Execution
                 this.workflowApplication.Abort();
             }
         }
+        Stopwatch timer = new Stopwatch();
         [STAThread]
         public void Run()
         {
             //
             //MemoryStream ms = new MemoryStream(ASCIIEncoding.Default.GetBytes(this.workflowDesigner.Text));
-         
+            timer.Start();
+
+
             try
             {
                 //string xaml = File.ReadAllText(@"C:\Users\ruwek\Documents\RPA-Workbench\Blank Processesdrfsfsfsf\Main.xaml");
@@ -185,22 +188,27 @@ namespace RPA.Workbench.AutomationEngine.Execution
         {
             this.running = false;
             Completed = true;
-            Console.WriteLine("Workflow Complete");
+            timer.Stop();
+            Console.WriteLine($"Workflow Completed : { timer.Elapsed.Hours}H : { timer.Elapsed.Minutes}M : { timer.Elapsed.Seconds}S : { timer.Elapsed.Milliseconds}Ms");
 
-            Process[] p = Process.GetProcessesByName("RPA-Workbench");
-            hWnd = (int)p[0].MainWindowHandle; // 
+            //Process[] p = Process.GetProcessesByName("RPA-Workbench");
+            //hWnd = (int)p[0].MainWindowHandle; // 
 
-            //If RPA-Workbench window is minimized, then restore it when workflow is done
-            var placement = GetPlacement(p[0].MainWindowHandle);
-            if (placement.showCmd.ToString() == "Minimized")
-            {
-                ShowWindow(hWnd, (int)States.SW_RESTORE);
-            }
+            ////If RPA-Workbench window is minimized, then restore it when workflow is done
+            //var placement = GetPlacement(p[0].MainWindowHandle);
+            //if (placement.showCmd.ToString() == "Minimized")
+            //{
+            //    ShowWindow(hWnd, (int)States.SW_RESTORE);
+            //}
 
+
+            //UNCOMMENT TO LET AUTOMATION ENGINE Kill itself
             System.Threading.Thread.Sleep(1000);
             Process[] automationEngineProcess = Process.GetProcessesByName("AutomationEngine");
-            automationEngineProcess[0].Kill();
-
+            //automationEngineProcess[0].Kill();
+            //automationEngineProcess[0].CloseMainWindow();
+            //automationEngineProcess[0].Close();
+            //System.Environment.Exit(0);
 
             //StatusViewModel.SetStatusText(string.Format(Resources.CompletedStatus, e.CompletionState.ToString()), this.workflowName);
         }

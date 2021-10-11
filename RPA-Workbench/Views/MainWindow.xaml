@@ -112,7 +112,7 @@
             <RowDefinition Height="25*"/>
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <DockPanel LastChildFill="True" Grid.RowSpan="3" Grid.ColumnSpan="1">
             <ribbon:Ribbon x:Name="MainRibbon" VerticalAlignment="Top" Width="auto" DockPanel.Dock="Top"  IsQuickAccessToolBarCustomizeButtonVisible="False" ApplicationButtonLabel="Home" QuickAccessToolBarLocation="None" Background="#FF217346" Foreground="White">
                 <!--Design Tab-->
@@ -149,6 +149,14 @@
                         </ribbon:SplitButton>
 
                     </ribbon:Group>
+                    <ribbon:Group Label="Automate" Width="88">
+
+                        <ribbon:Button Command="{Binding Path=ShowUiExplorerFromRibbonCommand}"  x:Name="btnRibbonOpenUiExplorerButtonParent" Label="Ui Explorer" ImageSourceSmallSize="50,50" VariantSize="Large" ImageSourceSmall="/RPA-Workbench;component/1. Resources/MainWindow Images/Top Ribbon Images/UiExplorer.png">
+                            <ribbon:Button.ImageSourceLarge>
+                                <ImageSource>/RPA-Workbench;component/1. Resources/MainWindow Images/Top Ribbon Images/UiExplorer.png</ImageSource>
+                            </ribbon:Button.ImageSourceLarge>
+                        </ribbon:Button>
+                    </ribbon:Group>
                 </ribbon:Tab>
                 <ribbon:Tab x:Name="RibbonTabTEST" Label="THISTAB"/>
 
@@ -164,14 +172,14 @@
                         <docking:ToolWindow Name="ErrorListToolWindow" Title="Error List" Content="{Binding ValidationErrorsView}"></docking:ToolWindow>
                     </docking:ToolWindowContainer>
                 </docking:DockSite.AutoHideBottomContainers>
-                
+
                 <docking:SplitContainer>
                     <!--ToolWindows (Left)-->
                     <docking:ToolWindowContainer x:Name="LeftToolContainer" HasCloseButton="False" CanTabsCloseOnMiddleClick="False" HorizontalContentAlignment="Stretch">
                         <docking:ToolWindow Name="ProjectToolWindow" Title="Project" HorizontalContentAlignment="Stretch" DefaultDockSide="Left"/>
                         <docking:ToolWindow Name="ActivitiesToolWindow" Content="{Binding ActivitiesView}" Title="Activities"/>
                     </docking:ToolWindowContainer>
-                    
+
                     <!--Workspace MDI Host-->
                     <docking:Workspace HorizontalContentAlignment="Stretch">
                         <docking:TabbedMdiHost x:Name="MDIHost" HasTabPinButtons="True" HorizontalContentAlignment="Stretch"/>
@@ -209,7 +217,7 @@
                         <TextBlock x:Name="characterPanel" MinWidth="40" Margin="7,0,7,0" VerticalAlignment="Center" Text="Ch 1" Visibility="Hidden"/>
                         <Label HorizontalAlignment="Right" Foreground="White">VB.NET</Label>
                     </StackPanel>
-                   
+
                 </StatusBarItem>
 
                 <!--<StatusBarItem x:Name="overwriteModePanel" Grid.Column="2" Margin="7,0,15,0" Content="INS" />-->
